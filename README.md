@@ -1,23 +1,44 @@
-# Complete Controller — CPA Partners
+# Complete Controller ? CPA Partners
 
-The supplied CPA partner landing page, preserved as a standalone HTML source for review and further development.
+This page is available in **WordPress and plain HTML**, based on the reviewed cc-modern 1.3.14 theme styling.
 
-## Preview
+[Download both formats from the latest release](https://github.com/tbmaui/cc-landing-cpa-partners/releases/latest).
 
-Open `source/index.html` in a browser. The source includes its styles, referral earnings calculator, referral dialog and two forms. Google Fonts requires an internet connection.
+## Choose a format
 
-## WordPress status
+| Option | Files | Use |
+|---|---|---|
+| Plain HTML | `html/index.html` and `html/assets/` | Upload a complete page-content document without WordPress, PHP, React or npm. |
+| HTML fragment | `html/content.html` and `html/assets/` | Place the page under the existing site's header/footer; load its scoped CSS and JavaScript as described in `html/README.md`. |
+| WordPress | Full `cc-modern-1.3.14.zip` theme attached to the release | Upload the shared theme, create a Full Width review draft and insert this page's starter. |
+| Existing theme integration | `wordpress/` | Page-specific files plus shared dependency snapshots for an existing cc-modern installation. This folder alone is not an installable theme. |
 
-No native CPA partner Gutenberg pattern was present in the supplied workspace when these repositories were created. This repository records that status explicitly; it is not a WordPress theme or an uploadable WordPress page package. The other four page repositories contain their tested WordPress integrations.
+The standalone HTML contains page content; it does not duplicate a site's header, footer, navigation or optional voice widget. The CSS is scoped to the supplied page wrapper. Local fonts/images are included. No build step is needed to host the delivered HTML.
 
-Before a production WordPress launch, port the page into the shared cc-modern theme, preserve the calculator and dialog behavior, and connect and verify the partner application/referral submission routes. The source forms are preview-only. Its 10% commission and 12-month term are illustrative and marked as pending approval in the source. No CPA-specific edits were included in Jennifer's industry-page feedback.
+## WordPress installation
 
-## Source and maintenance
+1. Back up the current theme and affected page. Upload the complete theme ZIP from the release through Appearance ? Themes ? Add New ? Upload Theme.
+2. Create a review draft using the **Full Width** template.
+3. Insert `cc-modern/page-cpa-partners` from **CC ? Whole Page Starters**. The starter importer can also create missing drafts; it skips existing URLs.
+4. Preserve any later site-specific edits, CRM configuration and navigation. Review the draft before applying its content to an existing page. A theme update does not replace previously saved page content.
 
-`page.json` records the source filename and checksum. The HTML is the current source for this repository. Follow `WRITING-STYLE.md` for copy changes. Do not commit credentials, dependencies or generated build output.
+All page releases attach the same shared theme ZIP; it only needs to be installed once. The page repositories do not automatically synchronize the separate [parent theme repository](https://github.com/tbmaui/complete-controller-modern-theme).
 
-[Shared WordPress theme](https://github.com/tbmaui/complete-controller-modern-theme)
+The CPA integration now includes native editable text/group blocks, with Custom HTML blocks for the calculator, FAQs, forms, SVG illustrations and referral dialog. The calculator and accessible dialog retain the supplied behavior. **Application/referral submissions are preview-only**, and commission terms remain illustrative/pending approval. Connect an approved server/CRM route and finalize terms before publishing this page. No real application or referral was submitted during testing.
 
-## Repository checks
+The supplied HTML reference remains under `source/index.html`. The maintained `html/` deliverable is generated from the reviewed WordPress pattern so both delivery formats share the same current content and theme styling.
 
-The HTML preview passed at 390px and 1440px with no horizontal overflow, broken images or JavaScript errors. The calculator and referral dialog were exercised without submitting forms.
+## Updating and checking the page
+
+```sh
+node tools/validate-blocks.js
+php tools/build-preview.php
+python -m pip install -r tools/requirements-export.txt
+python tools/export_html.py
+```
+
+The first two commands validate Gutenberg comments and create an ignored native preview. Rebuilding the deliverable requires PHP 8+, Python and the export dependency; serving the HTML requires none of these. Commit intentional changes under `html/` alongside the source pattern/assets. Scratch previews, archives, dependencies and environment files stay outside Git.
+
+The WordPress patterns were inspected in the actual WordPress 6.6.3 editor. HTML layout checks cover 390, 768, 1024, 1440 and 1920px, with no horizontal overflow, broken images or JavaScript errors. Embedding checks confirm the page CSS does not change surrounding host text/layout. The CPA calculator/dialog and consultation request behavior were exercised without sending real leads.
+
+See `html/README.md` for asset paths, supported embedding and launch configuration. Follow `WRITING-STYLE.md` for copy changes.

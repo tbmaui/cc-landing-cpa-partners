@@ -1,0 +1,2088 @@
+/**
+ * Complete Controller Modern — component layer.
+ *
+ * theme.json owns tokens (colour, type scale, spacing presets). This file owns the
+ * handful of component behaviours core blocks cannot express: button variants,
+ * hairline tile grids, the eyebrow rule, scroll-reveal and the stat counters.
+ *
+ * Every measurement here was read off completecontroller.com's computed styles.
+ * Changing a number changes the design — prefer editing theme.json first.
+ */
+
+:root {
+	/* Section padding. The reference holds a flat 140px at every width, which is
+	   disproportionate on a phone; these clamps match it at desktop and relax
+	   below. The desktop ceilings were raised above the reference deliberately —
+	   the client asked for more air between sections. */
+	--cc-section-pad: clamp(80px, 9.72vw, 140px);
+	--cc-section-pad-tight: clamp(72px, 8.33vw, 120px);
+	--cc-section-pad-sm: clamp(64px, 6.67vw, 96px);
+
+	/* Internal vertical rhythm. Measuring the reference showed its sections run
+	   200–600px taller than a naive rebuild, and almost none of that is outer
+	   padding — it is the space between an eyebrow, its heading, and the content
+	   below. These three values are what make a section feel unhurried. */
+	--cc-rhythm-eyebrow: 32px;
+	--cc-rhythm-head: clamp(48px, 5.5vw, 80px);
+	--cc-rhythm-block: clamp(40px, 4.4vw, 64px);
+
+	--cc-gutter: clamp(20px, 4vw, 76px);
+	--cc-max: 1400px;
+	--cc-hairline: rgba(70, 99, 89, 0.12);
+	--cc-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+	/* Solid buttons fill with cc-orange-ada (#bb4c28), not brand orange (#f36334).
+	   White 13px label on brand orange measures 3.16:1, below the 4.5:1 WCAG AA
+	   requires at that size; the darker fill measures 5.03:1. It reads as a shade
+	   of the same colour, not a different one.
+
+	   The hex here must match theme.json's cc-orange-ada preset, which is the
+	   authority — this comment previously named a colour the theme never used.
+
+	   Brand orange is unchanged everywhere it is safe: outline button text and
+	   borders, the manifesto accent, tile figures and rules. The "Brand Orange
+	   CTA" style variation restores it on solid buttons if that is ever wanted. */
+	--cc-btn-fill: var(--wp--preset--color--cc-orange-ada);
+	--cc-btn-fill-hover: #a8431f;
+}
+
+/* ---------------------------------------------------------------- layout -- */
+
+.cc-section {
+	padding-block: var(--cc-section-pad);
+	padding-inline: var(--cc-gutter);
+}
+.cc-section--tight { padding-block: var(--cc-section-pad-tight); }
+.cc-section--sm    { padding-block: var(--cc-section-pad-sm); }
+.cc-section--flush-top    { padding-top: 0; }
+.cc-section--flush-bottom { padding-bottom: 0; }
+
+/* Inner measure. Patterns nest this inside .cc-section. */
+.cc-container {
+	width: 100%;
+	max-width: var(--cc-max);
+	margin-inline: auto;
+}
+.cc-measure { max-width: 900px; }
+.cc-measure--narrow { max-width: 700px; }
+.cc-measure--wide { max-width: 1100px; }
+.cc-center { text-align: center; margin-inline: auto; }
+
+/* The eyebrow + heading + intro block that opens most sections. Separating it
+   from the content below with one shared value is what keeps the rhythm even
+   across every pattern, rather than each one carrying its own margin. */
+.cc-section-head { margin-bottom: var(--cc-rhythm-head); }
+.cc-section-head > :last-child { margin-bottom: 0; }
+.cc-section-head h2 + p,
+.cc-section-head h2 + .cc-lead { margin-top: var(--cc-rhythm-block); }
+
+/* Trailing actions sit as far below the content as the head sits above it. */
+.cc-section-foot { margin-top: var(--cc-rhythm-head); }
+
+/* ------------------------------------------------------------ typography -- */
+
+/* THE UTILITIES BELOW USE A DOUBLED CLASS SELECTOR ON PURPOSE.
+ *
+ * `.cc-eyebrow` alone is specificity (0,1,0) and loses to any ambient context
+ * rule of the form `.cc-card p` or `.cc-hero p`, which are (0,1,1). That has
+ * already caused three separate bugs: eyebrows resized inside heroes, a lead
+ * paragraph rendered white-on-white, and an eyebrow blown up to body size
+ * inside a card.
+ *
+ * Doubling the class makes them (0,2,0), so an explicitly applied utility always
+ * beats an ambient context rule — which is what an author means when they add
+ * the class. Guarded by tools/check-utilities.js.
+ */
+
+/* Eyebrows use cc-sage-ada (#567569), not the brand cc-sage (#6a9082).
+   At 11px the brand sage measures 3.19–3.54:1 against the theme's light
+   backgrounds — below the 4.5:1 WCAG AA needs for text this size. The accessible
+   sage is the same hue darkened 19% and clears 4.57:1 on every light surface.
+   Brand sage is still correct for large text, rules and decorative fills. */
+.cc-eyebrow.cc-eyebrow {
+	font-family: var(--wp--preset--font-family--helvetica);
+	font-size: 11px;
+	font-weight: 500;
+	line-height: 1.6;
+	letter-spacing: 0.24em;
+	text-transform: uppercase;
+	color: var(--wp--preset--color--cc-sage-ada);
+	margin: 0 0 var(--cc-rhythm-eyebrow);
+}
+/* 0.75 not 0.65 — 0.65 white over #466359 is 3.84:1 and fails AA.
+   The photographic hero is dark too but carries no .cc-section--dark, so it
+   needs naming here or its eyebrow renders dark sage on dark green (2.33:1). */
+.cc-section--dark .cc-eyebrow,
+.cc-hero:not(.cc-hero--light) .cc-eyebrow { color: rgba(255, 255, 255, 0.75); }
+
+/* The thin orange rule that sits above the manifesto pull-quote. */
+.cc-rule::before {
+	content: "";
+	display: block;
+	width: 1px;
+	height: 110px;
+	margin: 0 auto 48px;
+	background: var(--wp--preset--color--cc-orange);
+}
+.cc-rule--left::before { margin-inline: 0; }
+
+.cc-serif {
+	font-family: var(--wp--preset--font-family--cormorant);
+	font-weight: 300;
+	font-size: var(--wp--preset--font-size--display);
+	line-height: 1.1;
+	letter-spacing: -0.02em;
+}
+.cc-serif em { font-style: italic; }
+.cc-serif .cc-accent { color: var(--wp--preset--color--cc-orange); font-style: italic; }
+
+.cc-lead.cc-lead {
+	font-size: var(--wp--preset--font-size--lead);
+	font-weight: 300;
+	line-height: 1.6;
+}
+.cc-body.cc-body { font-size: 15px; line-height: 1.6; color: var(--wp--preset--color--cc-muted); }
+
+/* Dark sections invert text colour for every descendant that inherits.
+   The utility overrides are named explicitly: now that the utilities are (0,2,0),
+   a plain `.cc-section--dark p` rule would lose to them and leave muted grey
+   body copy sitting on dark green. */
+.cc-section--dark,
+.cc-section--dark :is(h1, h2, h3, h4, h5, h6) { color: #fff; }
+.cc-section--dark p,
+.cc-section--dark .cc-body.cc-body,
+.cc-section--dark .cc-lead.cc-lead { color: rgba(255, 255, 255, 0.88); }
+
+/* -------------------------------------------------------------- buttons -- */
+
+/* WordPress puts a block's className on the button's WRAPPER <div>, never on
+   the <a> inside it. Styling therefore has to reach the link through the
+   wrapper, which is what every rule below does.
+
+   Do NOT "fix" this by also writing cc-btn onto the <a> in pattern markup.
+   core/button's save() emits exactly `wp-block-button__link wp-element-button`
+   on the anchor, so any extra class there makes the stored HTML differ from the
+   regenerated HTML, and Gutenberg flags the block in the editor as "Block
+   contains unexpected or invalid content" with an Attempt recovery button.
+   Recovery then silently strips the class, so the styling was never reliable
+   either. Selecting through the wrapper keeps markup canonical AND styled.
+
+   The child selector also matches pages saved under the old markup, where the
+   <a> still carries cc-btn — those keep rendering correctly without a rebuild. */
+.wp-block-button.cc-btn > .wp-block-button__link {
+	display: inline-block;
+	font-family: var(--wp--preset--font-family--helvetica);
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	text-decoration: none;
+	border-radius: 0;
+	padding: 16px 40px;
+	border: 2px solid var(--cc-btn-fill);
+	background: var(--cc-btn-fill);
+	color: #fff;
+	transition: background-color 0.25s var(--cc-ease), color 0.25s var(--cc-ease),
+		border-color 0.25s var(--cc-ease);
+}
+.wp-block-button.cc-btn > .wp-block-button__link:hover {
+	background: var(--cc-btn-fill-hover);
+	border-color: var(--cc-btn-fill-hover);
+	color: #fff;
+}
+
+/* Outline label is text on white, so it needs the accessible orange too —
+   brand orange on white is the same failing 3.16:1. The border may stay brand
+   orange: a border is a UI boundary, judged at 3:1, which it clears. */
+.wp-block-button.cc-btn--outline > .wp-block-button__link {
+	background: transparent;
+	color: var(--wp--preset--color--cc-orange-ada);
+	border-color: var(--wp--preset--color--cc-orange);
+	padding: 16px 36px;
+}
+.wp-block-button.cc-btn--outline > .wp-block-button__link:hover {
+	background: var(--cc-btn-fill);
+	color: #fff;
+}
+
+/* Ghost sits on dark sections and photographic heroes. */
+.wp-block-button.cc-btn--ghost > .wp-block-button__link {
+	background: transparent;
+	color: rgba(255, 255, 255, 0.8);
+	border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.wp-block-button.cc-btn--ghost > .wp-block-button__link:hover {
+	background: rgba(255, 255, 255, 0.08);
+	border-color: rgba(255, 255, 255, 0.6);
+	color: #fff;
+}
+
+.wp-block-button.cc-btn--sm > .wp-block-button__link {
+	font-size: 12px;
+	letter-spacing: 0.14em;
+	padding: 10px 24px;
+	border-width: 1px;
+}
+
+/* ---------------------------------------------------------------- cards -- */
+
+.cc-card {
+	display: block;
+	background: #fff;
+	border: 1px solid var(--cc-hairline);
+	border-radius: 2px;
+	padding: 40px 32px;
+	height: 100%;
+	text-decoration: none;
+	transition: border-color 0.3s var(--cc-ease), transform 0.3s var(--cc-ease);
+}
+a.cc-card:hover { border-color: var(--wp--preset--color--cc-sage); transform: translateY(-2px); }
+.cc-card h3, .cc-card h4 { margin: 0 0 16px; }
+.cc-card p { margin: 0; font-size: 15px; line-height: 1.6; color: var(--wp--preset--color--cc-muted); }
+
+.cc-card--plain { border-color: var(--cc-hairline); padding: 32px; }
+
+/* -------------------------------------------------------------- grids ---- */
+
+.cc-grid { display: grid; gap: 24px; }
+.cc-grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.cc-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.cc-grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.cc-grid--prose { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 64px; }
+.cc-grid--quotes { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+
+/* Hairline grids: a 2px gap over 1px borders reads as a single ruled table.
+   This is the signature of the case-study, model and stat blocks. */
+.cc-grid--hairline { gap: 2px; }
+.cc-grid--hairline > * { border: 1px solid var(--wp--preset--color--cc-dark); border-radius: 0; }
+.cc-section--dark .cc-grid--hairline > * { border-color: rgba(255, 255, 255, 0.22); }
+
+@media (max-width: 1024px) {
+	.cc-grid--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	.cc-grid--quotes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 782px) {
+	.cc-grid--2, .cc-grid--3, .cc-grid--4,
+	.cc-grid--prose, .cc-grid--quotes { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* --------------------------------------------------------------- tiles --- */
+
+.cc-tile {
+	background: #fff;
+	padding: 40px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	min-height: 100%;
+}
+.cc-tile__meta {
+	font-size: 11px;
+	font-weight: 500;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: var(--wp--preset--color--cc-sage-ada);
+}
+.cc-tile__figure {
+	font-family: var(--wp--preset--font-family--montserrat);
+	font-size: clamp(32px, 3.05vw, 44px);
+	font-weight: 300;
+	line-height: 1.1;
+	color: var(--wp--preset--color--cc-orange);
+	margin-top: auto;
+}
+.cc-section--dark .cc-tile { background: transparent; }
+
+/* Linked tiles — the case study grid. The whole tile is one anchor, so the
+   photograph, the title and the figure are all part of the same target. */
+.cc-tile--linked {
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+	padding: 0;
+	text-decoration: none;
+	color: inherit;
+	overflow: hidden;
+	transition: background-color 0.3s var(--cc-ease);
+}
+.cc-tile__media {
+	display: block;
+	aspect-ratio: 16 / 9;
+	overflow: hidden;
+	background: var(--wp--preset--color--cc-deep);
+}
+.cc-tile__media img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	transition: transform 0.6s var(--cc-ease);
+}
+.cc-tile--linked:hover .cc-tile__media img { transform: scale(1.04); }
+
+.cc-tile__body {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 32px 40px 40px;
+	flex: 1;
+}
+.cc-tile__title {
+	font-family: var(--wp--preset--font-family--montserrat);
+	font-size: var(--wp--preset--font-size--card);
+	font-weight: 300;
+	line-height: 1.25;
+	letter-spacing: -0.02em;
+	color: var(--wp--preset--color--cc-deep);
+}
+.cc-tile__copy { font-size: 15px; line-height: 1.6; color: var(--wp--preset--color--cc-muted); }
+.cc-tile__foot {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 16px;
+	flex-wrap: wrap;
+	margin-top: auto;
+	padding-top: 24px;
+}
+.cc-tile__more {
+	font-size: 11px;
+	font-weight: 500;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: var(--wp--preset--color--cc-sage-ada);
+	white-space: nowrap;
+}
+.cc-tile--linked:hover .cc-tile__more { color: var(--wp--preset--color--cc-orange); }
+.cc-tile--linked:hover { background: #fdfdfd; }
+
+/* --------------------------------------------------- case study detail --- */
+
+/* The lead image sits directly under the title, so the hero closes on the
+   rhythm gap rather than its own full padding — otherwise the hero's bottom
+   padding and the image section's top padding stack into dead space. */
+.cc-case-hero { padding-bottom: var(--cc-rhythm-head); }
+
+.cc-case-hero__media { margin: 0; }
+.cc-case-hero__media img {
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	object-fit: cover;
+	display: block;
+}
+
+.cc-case-body {
+	display: grid;
+	grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+	gap: 40px 80px;
+	align-items: start;
+}
+.cc-case-body__para {
+	font-size: 17px;
+	line-height: 1.75;
+	color: var(--wp--preset--color--cc-muted);
+	margin: 0 0 24px;
+}
+.cc-case-body__para:last-child { margin-bottom: 0; }
+
+.cc-case-aside {
+	border-left: 1px solid var(--cc-hairline);
+	padding-left: 40px;
+	position: sticky;
+	top: 112px;
+}
+.cc-case-aside__metric {
+	font-family: var(--wp--preset--font-family--montserrat);
+	font-size: clamp(44px, 4.4vw, 64px);
+	font-weight: 300;
+	line-height: 1;
+	letter-spacing: -0.03em;
+	color: var(--wp--preset--color--cc-orange);
+	margin: 0;
+}
+.cc-case-aside__note {
+	font-size: 13px;
+	line-height: 1.5;
+	color: var(--wp--preset--color--cc-muted);
+	margin: 12px 0 0;
+}
+.cc-case-aside__list { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+.cc-case-aside__list li {
+	position: relative;
+	padding-left: 22px;
+	font-size: 15px;
+	line-height: 1.5;
+	color: var(--wp--preset--color--cc-dark);
+}
+.cc-case-aside__list li::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 0.55em;
+	width: 10px;
+	height: 1px;
+	background: var(--wp--preset--color--cc-orange);
+}
+
+@media (max-width: 900px) {
+	.cc-case-body { grid-template-columns: minmax(0, 1fr); }
+	.cc-case-aside { border-left: 0; padding-left: 0; position: static; border-top: 1px solid var(--cc-hairline); padding-top: 40px; }
+}
+
+/* ---------------------------------------------------------------- band --- */
+
+/* The trust strip between hero and manifesto. 82px tall on the reference page. */
+.cc-band {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 32px;
+	flex-wrap: wrap;
+	min-height: 82px;
+	padding-inline: var(--cc-gutter);
+	background: #fff;
+	border-bottom: 1px solid var(--wp--preset--color--cc-hairline);
+}
+.cc-band__text {
+	margin: 0;
+	font-size: 13px;
+	font-weight: 500;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: var(--wp--preset--color--cc-dark);
+}
+
+/* ---------------------------------------------------------------- hero --- */
+
+.cc-hero {
+	position: relative;
+	display: flex;
+	align-items: center;
+	min-height: min(1040px, 92vh);
+	padding-block: clamp(96px, 12vw, 180px);
+	padding-inline: var(--cc-gutter);
+	background: var(--wp--preset--color--cc-deep);
+	overflow: hidden;
+}
+.cc-hero__media {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+}
+.cc-hero__media img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+.cc-hero__scrim {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	background: linear-gradient(
+		100deg,
+		rgba(42, 59, 53, 0.94) 0%,
+		rgba(42, 59, 53, 0.82) 42%,
+		rgba(42, 59, 53, 0.35) 100%
+	);
+}
+.cc-hero__inner { position: relative; z-index: 2; width: 100%; max-width: var(--cc-max); margin-inline: auto; }
+.cc-hero__copy { max-width: 750px; }
+.cc-hero h1 { margin: 0 0 24px; color: #fff; }
+
+/* This rule styles the hero's own body copy, and the exclusions are load-bearing.
+   `.cc-hero p` alone is (0,1,1) and would silently outrank the single-class
+   utilities `.cc-eyebrow` and `.cc-lead`, so both are excluded by name — an
+   element carrying an explicit utility class should keep it. The exclusions also
+   push this selector to (0,3,1), which is why the light-hero override below is
+   written to the same weight. */
+.cc-hero p:not(.cc-eyebrow):not(.cc-lead) {
+	color: rgba(255, 255, 255, 0.88);
+	font-size: clamp(14px, 1.1vw, 17px);
+	line-height: 1.65;
+	max-width: 640px;
+}
+.cc-hero .cc-lead.cc-lead { color: rgba(255, 255, 255, 0.88); max-width: 640px; }
+
+/* Light hero — the default for every page that is not the homepage. */
+.cc-hero--light {
+	background: #fff;
+	min-height: 0;
+	padding-block: clamp(96px, 10vw, 150px);
+}
+.cc-hero--light h1 { color: var(--wp--preset--color--cc-dark); }
+/* Matches the weight of the dark-hero rule above. Written any lighter, light
+   heroes inherit white body text on a white background and vanish. */
+.cc-hero--light p:not(.cc-eyebrow):not(.cc-lead),
+.cc-hero--light .cc-lead.cc-lead { color: var(--wp--preset--color--cc-muted); }
+
+/* Blog opener — the supplied finance image remains a true full-bleed
+   background while the tighter height keeps the article index in view. */
+.cc-hero--blog {
+	min-height: clamp(430px, 42vw, 620px);
+	padding-block: clamp(110px, 11vw, 170px);
+}
+.cc-hero--blog .cc-hero__media img { object-position: 50% 54%; }
+.cc-hero--blog .cc-hero__scrim {
+	background: linear-gradient(
+		90deg,
+		rgba(18, 37, 32, .94) 0%,
+		rgba(18, 37, 32, .76) 46%,
+		rgba(18, 37, 32, .28) 100%
+	);
+}
+.cc-hero--blog .cc-hero__copy { max-width: 720px; }
+
+@media (max-width: 782px) {
+	.cc-hero--blog {
+		min-height: 430px;
+		padding-block: 108px 72px;
+	}
+	.cc-hero--blog .cc-hero__media img { object-position: 56% 50%; }
+	.cc-hero--blog .cc-hero__scrim {
+		background: linear-gradient(90deg, rgba(18, 37, 32, .94), rgba(18, 37, 32, .58));
+	}
+}
+
+.cc-actions { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 40px; }
+
+/* --------------------------------------------------------------- stats --- */
+
+.cc-stat { text-align: center; padding: 40px 24px; background: #fff; }
+.cc-stat__value {
+	font-family: var(--wp--preset--font-family--montserrat);
+	font-size: clamp(32px, 3.05vw, 44px);
+	font-weight: 300;
+	line-height: 1.1;
+	color: var(--wp--preset--color--cc-dark);
+	display: block;
+}
+.cc-stat__label {
+	font-size: 11px;
+	font-weight: 500;
+	letter-spacing: 0.24em;
+	text-transform: uppercase;
+	color: var(--wp--preset--color--cc-sage-ada);
+	margin-top: 12px;
+	display: block;
+}
+
+/* --------------------------------------------------------------- steps --- */
+
+.cc-step { background: #fff; border: 1px solid var(--cc-hairline); border-radius: 2px; padding: 40px 32px; height: 100%; }
+.cc-step__num {
+	font-family: var(--wp--preset--font-family--montserrat);
+	font-size: 44px;
+	font-weight: 300;
+	line-height: 1;
+	color: var(--wp--preset--color--cc-hairline);
+	display: block;
+	margin-bottom: 24px;
+}
+.cc-step__label {
+	font-size: 11px;
+	font-weight: 500;
+	letter-spacing: 0.24em;
+	text-transform: uppercase;
+	color: var(--wp--preset--color--cc-sage-ada);
+	display: block;
+	margin-bottom: 12px;
+}
+
+/* ---------------------------------------------------------- testimonial -- */
+
+.cc-quote { background: var(--wp--preset--color--cc-light); padding: 40px 32px; height: 100%; display: flex; flex-direction: column; gap: 20px; }
+.cc-quote__stars { color: var(--wp--preset--color--cc-orange-ada); letter-spacing: 0.3em; font-size: 13px; }
+.cc-quote__text { font-size: 15px; line-height: 1.7; color: var(--wp--preset--color--cc-dark); margin: 0; flex: 1; }
+.cc-quote__author { font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--wp--preset--color--cc-sage-ada); margin: 0; }
+
+/* -------------------------------------------------------------- header --- */
+
+.cc-header {
+	position: sticky;
+	top: 0;
+	z-index: 100;
+	background: #fff;
+	border-bottom: 1px solid var(--wp--preset--color--cc-hairline);
+	padding-inline: clamp(20px, 3vw, 44px);
+}
+.cc-header__inner { display: flex; align-items: center; justify-content: space-between; gap: 32px; min-height: 80px; }
+
+/* The nav / phone / CTA cluster. Core's flex layout does not apply a gap here,
+   so without this the phone number butts straight against the last nav item.
+   margin-left:auto keeps it right-aligned even before a site logo is uploaded,
+   when the logo block renders nothing and space-between has only one child. */
+.cc-header__inner > .wp-block-group {
+	display: flex;
+	align-items: center;
+	gap: 28px;
+	margin-left: auto;
+}
+.cc-header .wp-block-navigation { font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; }
+.cc-header .wp-block-navigation a { color: var(--wp--preset--color--cc-dark); text-decoration: none; }
+.cc-header .wp-block-navigation a:hover { color: var(--wp--preset--color--cc-sage); }
+.cc-header__phone { font-size: 12px; font-weight: 500; letter-spacing: 0.08em; color: var(--wp--preset--color--cc-dark); text-decoration: none; margin: 0; }
+
+/* Between tablet and desktop the six nav links, the phone number and the CTA
+   together overflow 80px and wrap to a second row. The phone is the one item
+   that is duplicated elsewhere on every page, so it is what gives way. */
+@media (max-width: 1200px) {
+	.cc-header__phone { display: none; }
+}
+/* Tablet: the links are still inline here (WordPress moves them into the overlay
+   only below 600px), so the logo and the gaps tighten to keep one row. */
+@media (max-width: 1024px) {
+	.cc-header .wp-block-site-logo img { max-width: 170px; height: auto; }
+	.cc-header .wp-block-navigation { gap: 18px; }
+	.cc-header__inner > .wp-block-group { gap: 18px; }
+}
+/* Below WordPress's 600px navigation breakpoint the links move into the overlay,
+   which leaves the logo and CTA comfortably on one line again. */
+@media (max-width: 782px) {
+	.cc-header { padding-inline: 20px; }
+	.cc-header__inner > .wp-block-group { gap: 16px; }
+}
+
+/* -------------------------------------------------------------- footer --- */
+
+.cc-footer { background: var(--wp--preset--color--cc-light); padding-block: clamp(56px, 6vw, 88px); padding-inline: var(--cc-gutter); }
+.cc-footer__badges { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 32px; }
+.cc-footer__badges .wp-block-image { margin: 0; }
+
+/*
+ * Same dual cap as .cc-badge__logo, tuned smaller for a footer. Height alone
+ * let the wide partner logotypes run ~270px while the square ProAdvisor badge
+ * sat at 56px with its own label unreadable; capping width too evens out the
+ * optical weight between tall art and wide art.
+ */
+.cc-footer__badges img {
+	max-height: 72px;
+	max-width: 200px;
+	width: auto;
+	height: auto;
+	object-fit: contain;
+}
+
+@media (max-width: 781px) {
+	.cc-footer__badges { gap: 28px; }
+	.cc-footer__badges img { max-height: 60px; max-width: 170px; }
+}
+
+/* ---------------------------------------------------------------- forms -- */
+
+.cc-form input[type="text"], .cc-form input[type="email"], .cc-form input[type="tel"],
+.cc-form select, .cc-form textarea {
+	width: 100%;
+	padding: 14px 16px;
+	font-family: inherit;
+	font-size: 15px;
+	color: var(--wp--preset--color--cc-dark);
+	background: #fff;
+	border: 1px solid var(--cc-hairline);
+	border-radius: 0;
+}
+.cc-form :is(input, select, textarea):focus-visible {
+	outline: 2px solid var(--wp--preset--color--cc-sage);
+	outline-offset: 1px;
+	border-color: transparent;
+}
+
+/* ------------------------------------------------------------ animation -- */
+
+/* The hidden start state is gated on .cc-js, which only lands if scripts run.
+   Without JS these selectors never match and content renders plainly visible. */
+.cc-js .cc-reveal {
+	opacity: 0;
+	transform: translateY(24px);
+	transition: opacity 0.7s var(--cc-ease), transform 0.7s var(--cc-ease);
+	will-change: opacity, transform;
+}
+.cc-js .cc-reveal.is-visible { opacity: 1; transform: none; }
+
+/* Stagger children so grids resolve in sequence rather than as one block. */
+.cc-js .cc-reveal--stagger > * {
+	opacity: 0;
+	transform: translateY(20px);
+	transition: opacity 0.6s var(--cc-ease), transform 0.6s var(--cc-ease);
+}
+.cc-js .cc-reveal--stagger.is-visible > * { opacity: 1; transform: none; }
+.cc-js .cc-reveal--stagger.is-visible > :nth-child(2) { transition-delay: 0.08s; }
+.cc-js .cc-reveal--stagger.is-visible > :nth-child(3) { transition-delay: 0.16s; }
+.cc-js .cc-reveal--stagger.is-visible > :nth-child(4) { transition-delay: 0.24s; }
+.cc-js .cc-reveal--stagger.is-visible > :nth-child(5) { transition-delay: 0.32s; }
+.cc-js .cc-reveal--stagger.is-visible > :nth-child(6) { transition-delay: 0.40s; }
+
+@media (prefers-reduced-motion: reduce) {
+	.cc-js .cc-reveal,
+	.cc-js .cc-reveal--stagger > * {
+		opacity: 1 !important;
+		transform: none !important;
+		transition: none !important;
+	}
+	.cc-card, .wp-block-button.cc-btn > .wp-block-button__link { transition: none !important; }
+}
+
+/* ----------------------------------------------------------- a11y ------- */
+
+.cc-sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* WordPress renders its own skip link with the theme's link colour. Give it an
+   explicit accessible pairing — it is only visible on focus, but when it is
+   visible it is the first thing a keyboard user sees. */
+.skip-link.screen-reader-text:focus {
+	background: var(--wp--preset--color--cc-dark);
+	color: #fff;
+	padding: 14px 24px;
+	font-size: 13px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	z-index: 200;
+}
+
+.cc-skip-link {
+	position: absolute;
+	left: -9999px;
+	top: 0;
+	z-index: 200;
+	padding: 12px 20px;
+	background: var(--wp--preset--color--cc-dark);
+	color: #fff;
+	font-size: 13px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+.cc-skip-link:focus { left: 0; }
+
+:where(a, button, input, select, textarea, summary):focus-visible {
+	outline: 2px solid var(--wp--preset--color--cc-orange);
+	outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------- pricing -- */
+
+.cc-plan {
+	background: #fff;
+	border: 1px solid var(--cc-hairline);
+	border-radius: 2px;
+	padding: 48px 32px;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+.cc-plan--featured { border-color: var(--wp--preset--color--cc-orange); border-width: 2px; }
+.cc-plan__name {
+	font-size: 11px;
+	font-weight: 500;
+	letter-spacing: 0.24em;
+	text-transform: uppercase;
+	color: var(--wp--preset--color--cc-sage-ada);
+	margin: 0;
+}
+.cc-plan__price {
+	font-family: var(--wp--preset--font-family--montserrat);
+	font-size: clamp(36px, 3.4vw, 48px);
+	font-weight: 300;
+	line-height: 1.1;
+	color: var(--wp--preset--color--cc-dark);
+	margin: 0;
+}
+.cc-plan__period {
+	display: block;
+	font-family: var(--wp--preset--font-family--helvetica);
+	font-size: 12px;
+	font-weight: 400;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--wp--preset--color--cc-faint);
+	margin-top: 8px;
+}
+.cc-plan__summary { font-size: 15px; line-height: 1.6; color: var(--wp--preset--color--cc-muted); margin: 0; }
+.cc-plan__features { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 12px; flex: 1; }
+.cc-plan__features li {
+	position: relative;
+	padding-left: 22px;
+	font-size: 15px;
+	line-height: 1.5;
+	color: var(--wp--preset--color--cc-dark);
+}
+.cc-plan__features li::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 0.55em;
+	width: 10px;
+	height: 1px;
+	background: var(--wp--preset--color--cc-orange);
+}
+.cc-plan .wp-block-buttons { margin-top: 16px; }
+
+/* ----------------------------------------------------------------- faq -- */
+
+.cc-faq { border-top: 1px solid var(--cc-hairline); }
+.cc-faq__item { border-bottom: 1px solid var(--cc-hairline); padding: 0; }
+.cc-faq__item summary {
+	cursor: pointer;
+	list-style: none;
+	padding: 28px 44px 28px 0;
+	position: relative;
+	font-family: var(--wp--preset--font-family--montserrat);
+	font-size: clamp(17px, 1.4vw, 20px);
+	font-weight: 400;
+	line-height: 1.4;
+	color: var(--wp--preset--color--cc-dark);
+}
+.cc-faq__item summary::-webkit-details-marker { display: none; }
+.cc-faq__item summary::after {
+	content: "+";
+	position: absolute;
+	right: 4px;
+	top: 50%;
+	transform: translateY(-50%);
+	font-size: 22px;
+	font-weight: 300;
+	color: var(--wp--preset--color--cc-orange);
+	transition: transform 0.25s var(--cc-ease);
+}
+.cc-faq__item[open] summary::after { content: "−"; }
+.cc-faq__item > p { margin: 0 0 28px; max-width: 68ch; font-size: 15px; line-height: 1.7; color: var(--wp--preset--color--cc-muted); }
+
+/* ---------------------------------------------------------------- team -- */
+
+.cc-person__photo { margin: 0; }
+/* Reserve the square before an image is chosen, so the grid does not collapse
+   in the editor and the empty slot reads as "put a portrait here". */
+.cc-person__photo { aspect-ratio: 1; background: var(--wp--preset--color--cc-light); border: 1px solid var(--cc-hairline); }
+.cc-person__photo img { width: 100%; height: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+.cc-person__role {
+	font-size: 11px;
+	font-weight: 500;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: var(--wp--preset--color--cc-sage-ada);
+	margin: 0;
+}
+
+/* ------------------------------------------------------------ longform -- */
+
+.cc-longform p, .cc-longform li { font-size: 16px; line-height: 1.75; color: var(--wp--preset--color--cc-muted); }
+.cc-longform p { margin: 0 0 20px; }
+.cc-longform :is(h2, h3, h4) { color: var(--wp--preset--color--cc-dark); }
+.cc-longform ul, .cc-longform ol { margin: 0 0 20px; padding-left: 20px; display: grid; gap: 8px; }
+.cc-longform a { text-decoration: underline; text-underline-offset: 2px; }
+
+/* ================================================== inner-page components == */
+
+/* -------------------------------------------------------------- icons ----- */
+
+.cc-icon { display: block; color: var(--wp--preset--color--cc-sage); }
+.cc-section--dark .cc-icon { color: rgba(255, 255, 255, 0.7); }
+
+/* -------------------------------------------------------------- split ----- */
+
+.cc-split {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	gap: 40px clamp(48px, 6vw, 96px);
+	align-items: center;
+}
+.cc-split__media { margin: 0; }
+.cc-split__media figure { margin: 0; }
+.cc-split__media img {
+	width: 100%;
+	aspect-ratio: 4 / 3;
+	object-fit: cover;
+	display: block;
+}
+.cc-split__copy > :first-child { margin-top: 0; }
+.cc-split__copy h2 { margin: 0 0 var(--cc-rhythm-block); }
+.cc-split__copy p { margin: 0 0 20px; }
+
+/* Reverse variant, so alternating rows need no second pattern. */
+.cc-split--flip .cc-split__media { order: 2; }
+
+@media (max-width: 900px) {
+	.cc-split { grid-template-columns: minmax(0, 1fr); }
+	.cc-split--flip .cc-split__media { order: 0; }
+}
+
+/* --------------------------------------------------------- before/after --- */
+
+.cc-ba {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	gap: 2px;
+}
+.cc-ba__col {
+	background: #fff;
+	border: 1px solid var(--wp--preset--color--cc-dark);
+	padding: 40px;
+}
+/* The "after" column carries the accent, so the eye lands on the outcome. */
+.cc-ba__col--after { background: var(--wp--preset--color--cc-dark); }
+.cc-ba__col--after .cc-ba__label { color: rgba(255, 255, 255, 0.75); }
+.cc-ba__col--after .cc-ba__list li { color: #fff; }
+.cc-ba__col--after .cc-ba__list li::before { background: #fff; }
+
+.cc-ba__label {
+	font-size: 11px;
+	font-weight: 500;
+	letter-spacing: 0.24em;
+	text-transform: uppercase;
+	color: var(--wp--preset--color--cc-sage-ada);
+	margin: 0 0 28px;
+}
+.cc-ba__list { list-style: none; padding: 0; margin: 0; display: grid; gap: 18px; }
+.cc-ba__list li {
+	position: relative;
+	padding-left: 26px;
+	font-size: 16px;
+	line-height: 1.55;
+	color: var(--wp--preset--color--cc-dark);
+}
+.cc-ba__list li::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 0.6em;
+	width: 12px;
+	height: 1px;
+	background: var(--wp--preset--color--cc-orange);
+}
+
+@media (max-width: 782px) {
+	.cc-ba { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ----------------------------------------------------------- timeline ----- */
+
+.cc-timeline {
+	display: grid;
+	gap: 0;
+	border-left: 1px solid var(--cc-hairline);
+	margin-left: 8px;
+}
+.cc-timeline__item {
+	position: relative;
+	padding: 0 0 clamp(40px, 4.4vw, 64px) clamp(28px, 3.4vw, 48px);
+}
+.cc-timeline__item:last-child { padding-bottom: 0; }
+/* The node on the spine. */
+.cc-timeline__item::before {
+	content: "";
+	position: absolute;
+	left: -5px;
+	top: 6px;
+	width: 9px;
+	height: 9px;
+	background: var(--wp--preset--color--cc-orange);
+	border-radius: 50%;
+}
+.cc-timeline__when {
+	font-size: 11px;
+	font-weight: 500;
+	letter-spacing: 0.24em;
+	text-transform: uppercase;
+	color: var(--wp--preset--color--cc-sage-ada);
+	margin: 0 0 12px;
+}
+.cc-timeline__item h3 { margin: 0 0 12px; }
+.cc-timeline__item p { margin: 0; max-width: 68ch; }
+
+/* -------------------------------------------------------- service list --- */
+
+.cc-svclist {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	gap: 0;
+	border-top: 1px solid var(--cc-hairline);
+}
+.cc-svclist__item {
+	display: flex;
+	gap: 20px;
+	padding: 32px 0;
+	border-bottom: 1px solid var(--cc-hairline);
+}
+/* A vertical rule between the columns, without needing a wrapper element. */
+.cc-svclist__item:nth-child(odd) { padding-right: 40px; border-right: 1px solid var(--cc-hairline); }
+.cc-svclist__item:nth-child(even) { padding-left: 40px; }
+.cc-svclist__icon { flex: 0 0 auto; padding-top: 2px; }
+.cc-svclist__body { display: flex; flex-direction: column; gap: 8px; }
+.cc-svclist__title {
+	font-family: var(--wp--preset--font-family--montserrat);
+	font-size: 20px;
+	font-weight: 400;
+	line-height: 1.3;
+	letter-spacing: -0.01em;
+	color: var(--wp--preset--color--cc-dark);
+}
+.cc-svclist__copy { font-size: 15px; line-height: 1.6; color: var(--wp--preset--color--cc-muted); }
+
+@media (max-width: 900px) {
+	.cc-svclist { grid-template-columns: minmax(0, 1fr); }
+	.cc-svclist__item:nth-child(odd) { padding-right: 0; border-right: 0; }
+	.cc-svclist__item:nth-child(even) { padding-left: 0; }
+}
+
+/* ------------------------------------------------------- feature quote --- */
+
+.cc-quote-feature { margin: 0; }
+.cc-quote-feature__author {
+	font-size: 12px;
+	font-weight: 500;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: var(--wp--preset--color--cc-sage-ada);
+	margin: 40px 0 0;
+}
+
+/* -------------------------------------------------------------- badges --- */
+
+.cc-badge {
+	background: #fff;
+	padding: 32px 24px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 16px;
+	text-align: center;
+	min-height: 100%;
+}
+.cc-badge__label {
+	font-size: 11px;
+	font-weight: 500;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: var(--wp--preset--color--cc-dark);
+}
+
+/*
+ * Credential logos arrive at mismatched aspect ratios — the ProAdvisor tiers
+ * are 269x357 portrait, Elite is 920 square, the partner marks are ~80px
+ * strips. Normalising on HEIGHT and letting width settle is what makes a row
+ * of unrelated third-party artwork read as a single deliberate row.
+ *
+ * Doubled class per the utility rule in README: (0,2,0) beats the ambient
+ * .cc-badge img context, so this survives wherever the pattern is nested.
+ */
+.cc-badge__logo.cc-badge__logo {
+	margin: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+}
+/*
+ * Two constraints, not one. Height alone lets a wide logotype run the full cell
+ * and dwarf a portrait badge beside it; width alone shrinks the portrait badges
+ * to illegibility. Capping BOTH — 120px tall, 220px wide — lands tall art and
+ * wide art at comparable optical weight.
+ */
+.cc-badge__logo.cc-badge__logo img {
+	max-height: 120px;
+	max-width: 220px;
+	width: auto;
+	height: auto;
+	object-fit: contain;
+}
+
+@media (max-width: 781px) {
+	.cc-badge__logo.cc-badge__logo img {
+		max-height: 88px;
+		max-width: 160px;
+	}
+}
+
+/* --------------------------------------------------- comparison table --- */
+
+.cc-cmp { overflow-x: auto; background: #fff; border: 1px solid var(--cc-hairline); }
+.cc-cmp__table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 640px; }
+.cc-cmp__table th,
+.cc-cmp__table td { padding: 18px 24px; text-align: left; border-bottom: 1px solid var(--cc-hairline); }
+.cc-cmp__table thead th {
+	font-family: var(--wp--preset--font-family--helvetica);
+	font-size: 11px;
+	font-weight: 500;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: var(--wp--preset--color--cc-sage-ada);
+	border-bottom-color: var(--wp--preset--color--cc-dark);
+	white-space: nowrap;
+}
+.cc-cmp__table tbody th {
+	font-weight: 400;
+	color: var(--wp--preset--color--cc-dark);
+	width: 40%;
+}
+.cc-cmp__table td { text-align: center; width: 20%; }
+.cc-cmp__table tbody tr:last-child th,
+.cc-cmp__table tbody tr:last-child td { border-bottom: 0; }
+.cc-cmp__featured { background: var(--wp--preset--color--cc-tint); }
+.cc-cmp__yes { color: var(--wp--preset--color--cc-orange-ada); font-size: 15px; }
+.cc-cmp__no { color: var(--wp--preset--color--cc-faint); }
+.cc-cmp__text { font-size: 14px; color: var(--wp--preset--color--cc-muted); }
+
+/* The table scrolls above this width; below it, stack each row as a card. */
+@media (max-width: 640px) {
+	.cc-cmp { overflow-x: visible; border: 0; background: transparent; }
+	.cc-cmp__table { min-width: 0; }
+	.cc-cmp__table thead { display: none; }
+	.cc-cmp__table tbody tr {
+		display: block;
+		background: #fff;
+		border: 1px solid var(--cc-hairline);
+		margin-bottom: 12px;
+		padding: 8px 0;
+	}
+	.cc-cmp__table tbody th { display: block; width: auto; border-bottom: 0; padding-bottom: 8px; font-weight: 500; }
+	.cc-cmp__table tbody td {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: auto;
+		text-align: right;
+		border-bottom: 0;
+		padding: 6px 24px;
+	}
+	.cc-cmp__table tbody td::before {
+		content: attr(data-label);
+		font-size: 11px;
+		font-weight: 500;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--wp--preset--color--cc-sage-ada);
+	}
+	.cc-cmp__featured { background: transparent; }
+}
+
+/* ------------------------------------------------------ contact details -- */
+
+.cc-contact-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 28px; }
+.cc-contact-list li { display: flex; gap: 16px; align-items: flex-start; }
+.cc-contact-list__label {
+	display: block;
+	font-size: 11px;
+	font-weight: 500;
+	letter-spacing: 0.24em;
+	text-transform: uppercase;
+	color: var(--wp--preset--color--cc-sage-ada);
+	margin-bottom: 6px;
+}
+.cc-contact-list__value { font-size: 17px; line-height: 1.5; color: var(--wp--preset--color--cc-dark); }
+.cc-contact-list__value a { color: var(--wp--preset--color--cc-dark); text-decoration: none; }
+.cc-contact-list__value a:hover { color: var(--wp--preset--color--cc-orange-ada); }
+
+/* ================================================= exact homepage port === */
+
+/* The homepage is a native-block port of the supplied React reference. These
+   selectors preserve the reusable primitives above while matching the original
+   composition, measures and vertical rhythm section by section. */
+
+.cc-header {
+	padding-inline: clamp(16px, 3vw, 48px);
+}
+.cc-header__inner { min-height: 80px; gap: 20px; }
+.cc-header .wp-block-site-logo img { width: auto; max-width: 260px; max-height: 40px; }
+.cc-header__inner > .cc-header__nav-cluster { gap: 4px; }
+.cc-header .wp-block-navigation { gap: 4px; }
+.cc-header .wp-block-navigation-item__content { padding: 0 16px; min-height: 36px; display: flex; align-items: center; }
+.cc-header__phone {
+	font-size: 14px;
+	letter-spacing: 0.02em;
+	padding: 0 20px;
+	margin-left: 12px;
+	border-inline: 1px solid rgba(70,99,89,0.15);
+}
+.cc-header__phone a { color: inherit; }
+.cc-header__socials { display: flex; align-items: center; gap: 0; }
+.cc-header__socials a {
+	display: grid;
+	place-items: center;
+	width: 32px;
+	height: 32px;
+	font-size: 15px;
+	font-weight: 500;
+	color: var(--wp--preset--color--cc-dark);
+	text-decoration: none;
+}
+.cc-header__socials a:hover { color: var(--wp--preset--color--cc-orange-ada); }
+
+.cc-hero {
+	min-height: 100vh;
+	padding: 110px clamp(24px, 6vw, 80px) 80px;
+}
+.cc-hero__inner { max-width: none; }
+.cc-hero__scrim {
+	background: linear-gradient(90deg, rgba(30,42,38,0.92) 0%, rgba(30,42,38,0.75) 40%, rgba(30,42,38,0.40) 70%, rgba(30,42,38,0.10) 100%);
+}
+.cc-hero__copy { max-width: 750px; }
+.cc-hero .cc-eyebrow.cc-eyebrow { margin-bottom: 20px; }
+.cc-hero h1 { margin-bottom: 28px; text-shadow: 0 2px 24px rgba(0,0,0,0.25); }
+.cc-hero h1 span { color: var(--wp--preset--color--cc-sage); }
+.cc-hero__copy > p:not(.cc-eyebrow) { margin: 0 0 16px; font-weight: 300; }
+
+.cc-band { min-height: 82px; padding-block: 20px; }
+
+.cc-manifesto { position: relative; overflow: hidden; padding: clamp(80px,12vw,160px) clamp(24px,6vw,80px); }
+.cc-manifesto::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background-image: radial-gradient(circle at 1px 1px, rgba(106,144,130,0.12) 1px, transparent 0);
+	background-size: 40px 40px;
+}
+.cc-manifesto .cc-container { position: relative; max-width: 1200px; }
+.cc-manifesto .cc-rule { display: flex; align-items: flex-start; gap: 24px; max-width: none; }
+.cc-manifesto .cc-rule::before { width: 3px; height: clamp(60px,8vw,100px); flex: 0 0 3px; margin: 12px 0 0; }
+.cc-manifesto .cc-serif { max-width: 900px; margin: 0; }
+
+.cc-audience .cc-section-head { margin-bottom: 64px; max-width: 700px; }
+.cc-audience .cc-section-head h2 { font-size: clamp(28px,3.5vw,44px) !important; font-weight: 400 !important; }
+.cc-audience-card { min-height: 340px; display: flex; flex-direction: column; justify-content: space-between; }
+.cc-card__icon { display: block; color: var(--wp--preset--color--cc-sage); margin-bottom: 24px; }
+.cc-card__link { margin-top: 24px !important; }
+.cc-card__link a { font-size: 12px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--wp--preset--color--cc-orange-ada); }
+
+.cc-challenge h2 { max-width: 900px; margin: 0 0 48px; }
+.cc-challenge .cc-grid--prose p { margin: 0; font-size: clamp(15px,1.2vw,18px); line-height: 1.7; color: #555; }
+.cc-challenge-solution { margin-top: 64px; padding: 48px 40px; background: var(--wp--preset--color--cc-light); border-left: 4px solid var(--wp--preset--color--cc-orange); }
+.cc-challenge-solution__label { margin: 0 0 16px; font-size: 16px; font-weight: 500; color: var(--wp--preset--color--cc-dark); }
+.cc-challenge-solution p:last-child { max-width: 720px; margin: 0; font-size: clamp(15px,1.2vw,18px); line-height: 1.7; color: #555; }
+
+.cc-philosophy { position: relative; overflow: hidden; padding: 80px var(--cc-gutter) 140px; }
+.cc-philosophy::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background-image: radial-gradient(circle at 1px 1px, rgba(106,144,130,0.28) 1px, transparent 0);
+	background-size: 40px 40px;
+}
+.cc-philosophy .cc-container { position: relative; max-width: 1100px; }
+.cc-philosophy__inner { max-width: 1100px; }
+.cc-philosophy__rule { width: 40px !important; border: 0 !important; border-top: 1px solid var(--wp--preset--color--cc-dark) !important; margin: 0 auto 40px !important; opacity: 1 !important; }
+.cc-philosophy h2 { max-width: 1100px; margin: 0 auto 64px; }
+.cc-philosophy .cc-lead { max-width: 800px; margin: 0 auto 24px !important; color: #555; font-weight: 400; line-height: 1.7; }
+.cc-philosophy .cc-philosophy__strong { color: var(--wp--preset--color--cc-dark); }
+.cc-philosophy__tagline { margin-top: 56px; font-family: var(--wp--preset--font-family--cormorant); font-style: italic; font-size: clamp(14px,1.3vw,18px); color: var(--wp--preset--color--cc-sage-ada); }
+
+.cc-human-ai .cc-section-head { margin-bottom: 64px; }
+.cc-human-ai .cc-section-head .cc-measure { max-width: 900px; }
+.cc-human-ai .cc-section-head .cc-measure > p { max-width: 720px; margin: 0 0 24px; font-size: clamp(15px,1.2vw,18px); line-height: 1.7; }
+.cc-human-ai .cc-model-lead { font-size: 18px !important; font-style: italic; color: #fff !important; }
+.cc-human-ai .cc-tile { padding: 40px 36px; background: rgba(11,11,11,.35); }
+.cc-human-ai .cc-tile:first-child { border-top: 3px solid var(--wp--preset--color--cc-sage); }
+.cc-human-ai .cc-tile:last-child { border-top: 3px solid var(--wp--preset--color--cc-orange); }
+.cc-human-ai .cc-tile h3 { font-size: 28px !important; margin: 0 0 16px; }
+.cc-human-ai .cc-tile p:last-child { color: rgba(255,255,255,.65); font-size: 14px; line-height: 1.6; }
+.cc-model-close { margin: 48px 0 0; max-width: 600px; font-size: 16px; font-weight: 300; line-height: 1.6; color: rgba(255,255,255,.82) !important; }
+
+.cc-features .cc-section-head { margin-bottom: 80px; }
+.cc-features .cc-section-head h2 { margin-bottom: 24px !important; }
+.cc-features .cc-section-head p:last-child { max-width: 720px; margin: 0; font-size: clamp(15px,1.2vw,18px); line-height: 1.7; color: #555; }
+.cc-grid--features { grid-template-columns: repeat(auto-fit,minmax(min(100%,300px),1fr)); }
+.cc-features .cc-card { min-height: 100%; }
+.cc-card__icon--round { width: 52px; height: 52px; margin-bottom: 28px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: var(--wp--preset--color--cc-sage); }
+.cc-card__icon--round .cc-icon { color: #fff; }
+
+.cc-how .cc-section-head { margin-bottom: 64px; }
+.cc-how .cc-step { position: relative; }
+.cc-how .cc-step__num { position: absolute; top: 20px; right: 24px; margin: 0; font-size: clamp(48px,5vw,72px); color: rgba(106,144,130,.2); }
+.cc-how .cc-step__label { color: var(--wp--preset--color--cc-orange-ada); margin-bottom: 20px; }
+.cc-how .cc-step h3 { font-size: 20px !important; padding-right: 20px; margin: 0 0 16px; }
+
+.cc-works { padding-block: 120px; }
+.cc-works .cc-container { max-width: 1560px; }
+.cc-works .cc-section-head { margin-bottom: 60px; padding-bottom: 20px; border-bottom: 1px solid var(--wp--preset--color--cc-dark); }
+.cc-works .cc-tile__body { padding: 20px 24px; border-top: 1px solid var(--wp--preset--color--cc-dark); }
+.cc-work-caption { flex-direction: row; align-items: center; justify-content: space-between; gap: 16px; }
+.cc-work-caption .cc-tile__meta { display: block; margin-bottom: 6px; }
+.cc-work-caption .cc-tile__title { display: block; font-size: 18px; font-weight: 500; color: var(--wp--preset--color--cc-dark); }
+.cc-work-caption .cc-tile__figure { margin: 0; font-family: inherit; font-size: 12px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; white-space: nowrap; color: var(--wp--preset--color--cc-orange-ada); }
+
+.cc-testimonials .cc-section-head { position: relative; margin-bottom: 60px; }
+.cc-testimonials .cc-section-head::after { content: ""; display: block; width: 60px; height: 2px; margin: 20px auto 0; background: var(--wp--preset--color--cc-orange); }
+.cc-testimonials .cc-section-head h2 { font-size: clamp(36px,5vw,64px) !important; line-height: 1.1; }
+.cc-quote--featured { min-height: 0; padding: clamp(40px,5vw,72px); margin-bottom: 48px; }
+.cc-quote--featured .cc-quote__stars { font-size: 20px; margin-bottom: 12px; }
+.cc-quote--featured .cc-quote__text { max-width: 900px; font-size: clamp(18px,2vw,28px); line-height: 1.45; margin-bottom: 20px; }
+.cc-quote__person, .cc-quote__author { display: flex; align-items: center; gap: 16px; }
+.cc-quote__avatar { width: 48px; height: 48px; flex: 0 0 48px; display: grid; place-items: center; border-radius: 50%; color: #fff; background: var(--wp--preset--color--cc-sage); font-size: 18px; }
+.cc-quote__person strong, .cc-quote__person small, .cc-quote__author strong, .cc-quote__author small { display: block; }
+.cc-quote__person strong, .cc-quote__author strong { color: var(--wp--preset--color--cc-dark); font-size: 14px; }
+.cc-quote__person small, .cc-quote__author small { color: var(--wp--preset--color--cc-sage-ada); font-size: 12px; font-weight: 400; letter-spacing: 0; text-transform: none; }
+.cc-quote__author .cc-quote__avatar { width: 36px; height: 36px; flex-basis: 36px; font-size: 14px; }
+.cc-quote__dots { display: flex; gap: 8px; margin-top: 40px; }
+.cc-quote__dots span { width: 8px; height: 8px; border-radius: 4px; background: #d5d5d5; }
+.cc-quote__dots .is-active { width: 32px; background: var(--wp--preset--color--cc-orange); }
+
+.cc-emotional .cc-measure { max-width: 900px; }
+.cc-emotional .cc-measure h2 { margin: 0 0 32px; }
+.cc-emotional .cc-measure > p { max-width: 720px; margin: 0 0 56px; font-size: clamp(15px,1.2vw,18px); line-height: 1.7; }
+.cc-emotional-grid { margin-bottom: 56px; }
+.cc-emotional-card { padding: 36px 32px; background: rgba(11,11,11,.3); }
+.cc-emotional-card .cc-tile__meta { color: rgba(255,255,255,.82); margin-bottom: 12px; }
+.cc-emotional-card__text { margin: 0; font-size: 20px; line-height: 1.4; color: #fff !important; }
+.cc-emotional-close { max-width: 680px; margin: 0; font-size: clamp(20px,2.2vw,30px); line-height: 1.4; color: #b8cec5 !important; }
+
+.cc-closing-head { position: relative; max-width: 800px; margin-bottom: 80px; }
+.cc-closing-head::before { content: ""; display: block; width: 40px; height: 1px; margin: 0 auto 40px; background: var(--wp--preset--color--cc-sage); }
+.cc-closing-prose { max-width: 1000px; margin: 0 auto 64px; }
+.cc-closing-prose .cc-lead { color: var(--wp--preset--color--cc-dark); line-height: 1.7; }
+.cc-closing-quote { max-width: 700px; margin: 0 auto; font-style: italic; font-size: clamp(22px,2.5vw,32px); line-height: 1.5; color: var(--wp--preset--color--cc-dark); }
+.cc-closing-note { margin: 20px 0 0; font-size: 13px; color: #666; }
+.cc-closing .cc-stat { background: var(--wp--preset--color--cc-light); }
+.cc-stat__icon { width: 48px; height: 48px; margin: 0 auto 20px; border-radius: 50%; display: grid; place-items: center; background: var(--wp--preset--color--cc-sage); }
+.cc-stat__icon .cc-icon { color: #fff; }
+.cc-stat__detail { margin: 12px 0 0; font-size: 13px; line-height: 1.6; color: #666; }
+
+.cc-consultation { padding-block: clamp(60px,8vw,100px); }
+.cc-consultation .cc-container { max-width: 1200px; }
+.cc-consultation h2 { white-space: pre-line; }
+.cc-consultation .cc-grid--prose { grid-template-columns: repeat(auto-fit,minmax(min(100%,420px),1fr)); gap: clamp(40px,5vw,80px); }
+.cc-consultation .cc-form > .cc-body { margin: 0 0 32px; color: #555; }
+.cc-consultation-form { display: flex; flex-direction: column; gap: 20px; }
+.cc-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.cc-consultation-form label { display: block; }
+.cc-consultation-form label > span { display: block; margin-bottom: 4px; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: #666; }
+.cc-consultation-form input[type="text"],
+.cc-consultation-form input[type="email"],
+.cc-consultation-form input[type="tel"],
+.cc-consultation-form select,
+.cc-consultation-form textarea {
+	width: 100%;
+	padding: 12px 0;
+	font: inherit;
+	font-size: 15px;
+	letter-spacing: .01em;
+	color: var(--wp--preset--color--cc-dark);
+	background: transparent;
+	border: 0;
+	border-bottom: 1px solid #d5d5d5;
+	border-radius: 0;
+}
+.cc-consultation-form textarea { resize: vertical; }
+.cc-consultation-form button { margin-top: 12px; padding: 18px 24px; font: inherit; font-size: 13px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--wp--preset--color--cc-orange-ada); background: transparent; border: 2px solid var(--wp--preset--color--cc-orange); cursor: pointer; }
+.cc-consultation-form button:hover { color: #fff; background: var(--cc-btn-fill); }
+.cc-consultation-form button[disabled] { cursor: wait; opacity: .6; }
+.cc-form-response { padding: 14px 18px; font-size: 13px; line-height: 1.5; color: var(--wp--preset--color--cc-dark); border: 1px solid var(--wp--preset--color--cc-sage); background: rgba(106,144,130,.08); }
+
+@media (max-width: 1280px) {
+	.cc-header .wp-block-navigation-item__content { padding-inline: 10px; }
+	.cc-header__phone { display: none; }
+}
+@media (min-width: 1200px) {
+	:root {
+		--cc-section-pad: 140px;
+		--cc-section-pad-tight: 120px;
+	}
+}
+@media (max-width: 1024px) {
+	.cc-header__socials { display: none; }
+	.cc-manifesto .cc-rule { justify-content: center; }
+}
+@media (max-width: 782px) {
+	.cc-hero { min-height: 0; padding-top: 120px; }
+	.cc-manifesto .cc-rule { display: block; }
+	.cc-manifesto .cc-rule::before { width: 1px; margin: 0 auto 48px; }
+	.cc-work-caption { align-items: flex-start; }
+	.cc-form-row { grid-template-columns: 1fr; }
+	.cc-closing-prose { grid-template-columns: 1fr; }
+}
+
+/* ------------------------------------------------ v1.2 whole-page starters */
+
+.cc-starter-page {
+	--cc-starter-ink: var(--wp--preset--color--cc-dark);
+	--cc-starter-muted: var(--wp--preset--color--cc-muted);
+	margin: 0;
+}
+
+.cc-starter-page > * { margin-block-start: 0; }
+
+.cc-starter-hero {
+	position: relative;
+	isolation: isolate;
+	display: flex;
+	align-items: center;
+	min-height: clamp(560px, 54vw, 760px);
+	padding: clamp(120px, 13vw, 184px) var(--cc-gutter) clamp(88px, 10vw, 144px);
+	overflow: hidden;
+	background: var(--wp--preset--color--cc-dark);
+}
+
+.cc-starter-hero::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	background: linear-gradient(90deg, rgba(22, 35, 31, .97) 0%, rgba(22, 35, 31, .9) 43%, rgba(22, 35, 31, .2) 78%, rgba(22, 35, 31, .08) 100%);
+}
+
+.cc-starter-hero__media {
+	position: absolute;
+	inset: 0;
+	z-index: -2;
+}
+
+.cc-starter-hero__media figure,
+.cc-starter-hero__media img {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	object-fit: cover;
+}
+
+.cc-starter-hero__copy {
+	position: relative;
+	width: 100%;
+	margin-inline: auto;
+}
+
+.cc-starter-hero__copy > * { max-width: 760px; }
+.cc-starter-hero__copy h1 { margin: 0 0 28px; color: #fff; }
+.cc-starter-hero__copy .cc-eyebrow,
+.cc-starter-hero__copy .cc-lead.cc-lead { color: rgba(255, 255, 255, .9); }
+.cc-starter-hero__copy .cc-lead { max-width: 680px; }
+.cc-starter-hero--about .cc-starter-hero__media img { object-position: 58% center; }
+.cc-starter-hero--services .cc-starter-hero__media img,
+.cc-starter-hero--pricing .cc-starter-hero__media img,
+.cc-starter-hero--blog .cc-starter-hero__media img { object-position: center; }
+.cc-starter-hero--testimonials .cc-starter-hero__media img { object-position: 58% center; }
+
+.cc-starter-stats {
+	padding: clamp(40px, 5vw, 72px) var(--cc-gutter);
+	background: #fff;
+	border-bottom: 1px solid var(--cc-hairline);
+}
+
+.cc-starter-stat { text-align: center; }
+.cc-starter-stat > * { margin: 0; }
+.cc-starter-stat__value {
+	font-family: var(--wp--preset--font-family--cormorant);
+	font-size: clamp(38px, 4vw, 58px);
+	line-height: 1;
+	color: var(--wp--preset--color--cc-sage);
+}
+.cc-starter-stat__label {
+	margin-top: 12px !important;
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: .18em;
+	text-transform: uppercase;
+	color: var(--cc-starter-ink);
+}
+.cc-starter-stat > p:last-child:not(.cc-starter-stat__label) {
+	margin-top: 8px;
+	font-size: 13px;
+	color: var(--cc-starter-muted);
+}
+.cc-starter-stats--dark { background: var(--wp--preset--color--cc-dark); border: 0; }
+.cc-starter-stats--dark .cc-starter-stat__value { color: #fff; }
+.cc-starter-stats--dark .cc-starter-stat__label { color: rgba(255, 255, 255, .76); }
+
+.cc-starter-story__copy p { margin: 0 0 22px; font-size: 16px; line-height: 1.8; color: var(--cc-starter-muted); }
+.cc-starter-story__quote { max-width: 900px; margin: clamp(56px, 7vw, 96px) auto 0; padding: 40px 0 0; border-top: 1px solid var(--cc-hairline); }
+.cc-starter-story__quote p { margin: 0; font-family: var(--wp--preset--font-family--cormorant); font-size: clamp(34px, 4vw, 58px); font-style: italic; line-height: 1.18; color: var(--cc-starter-ink); }
+.cc-starter-story__quote cite { display: block; margin-top: 24px; font-size: 11px; font-style: normal; letter-spacing: .18em; text-transform: uppercase; color: var(--wp--preset--color--cc-sage-ada); }
+
+.cc-starter-founder__grid,
+.cc-starter-book__grid {
+	display: grid;
+	grid-template-columns: minmax(0, 1.05fr) minmax(320px, .85fr);
+	align-items: center;
+	gap: clamp(48px, 8vw, 120px);
+}
+.cc-starter-founder__copy > p { line-height: 1.75; color: var(--cc-starter-muted); }
+.cc-starter-founder__salutation { margin-top: 48px; font-weight: 600; color: var(--cc-starter-ink) !important; }
+.cc-starter-founder__close { font-family: var(--wp--preset--font-family--cormorant); font-size: 24px; font-style: italic; color: var(--cc-starter-ink) !important; }
+.cc-starter-founder__signature { width: 180px; margin: 32px 0 12px; }
+.cc-starter-founder__signature img { width: 100%; height: auto; }
+.cc-starter-founder__byline { font-size: 11px; line-height: 1.7 !important; letter-spacing: .14em; text-transform: uppercase; }
+.cc-starter-founder__portrait { margin: 0; background: var(--wp--preset--color--cc-sage); }
+.cc-starter-founder__portrait img { display: block; width: 100%; max-height: 800px; object-fit: cover; object-position: top center; }
+
+.cc-starter-card__number {
+	margin: 0 0 32px !important;
+	font-family: var(--wp--preset--font-family--cormorant);
+	font-size: 44px !important;
+	line-height: 1;
+	color: var(--wp--preset--color--cc-sage) !important;
+}
+.cc-starter-value { min-height: 300px; }
+
+.cc-starter-statement__copy {
+	margin: 0 0 32px;
+	font-size: clamp(36px, 5vw, 70px);
+	line-height: 1.08;
+	color: #fff !important;
+}
+.cc-starter-statement .cc-eyebrow { color: rgba(255, 255, 255, .76); }
+
+.cc-starter-book__grid { grid-template-columns: minmax(280px, .72fr) minmax(0, 1.2fr); }
+.cc-starter-book__image { max-width: 520px; margin: 0 auto; }
+.cc-starter-book__image img { width: 100%; height: auto; filter: drop-shadow(0 28px 36px rgba(22, 35, 31, .18)); }
+.cc-starter-book__copy p { line-height: 1.75; color: var(--cc-starter-muted); }
+.cc-starter-book__copy .wp-block-buttons { margin-top: 40px; }
+
+.cc-starter-process__intro {
+	display: grid;
+	grid-template-columns: minmax(0, 1.3fr) minmax(280px, .7fr);
+	gap: clamp(40px, 7vw, 96px);
+	align-items: end;
+	margin-bottom: clamp(64px, 8vw, 112px);
+}
+.cc-starter-process__intro .cc-section-head { margin: 0; }
+.cc-starter-process__list { border-top: 1px solid var(--cc-hairline); }
+.cc-starter-process__item {
+	position: relative;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	gap: clamp(40px, 8vw, 120px);
+	padding: clamp(48px, 7vw, 88px) 0;
+	border-bottom: 1px solid var(--cc-hairline);
+}
+.cc-starter-process__item:nth-child(even) .cc-starter-process__title { order: 2; }
+.cc-starter-process__number { margin: 0; font-family: var(--wp--preset--font-family--cormorant); font-size: clamp(72px, 9vw, 132px); line-height: .8; color: var(--wp--preset--color--cc-sage); }
+.cc-starter-process__title h3 { margin: -12px 0 0; }
+.cc-starter-process__copy { align-self: end; }
+.cc-starter-process__copy p { line-height: 1.75; color: var(--cc-starter-muted); }
+.cc-starter-process__outcome { margin-top: 32px !important; font-size: 11px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--wp--preset--color--cc-orange-ada) !important; }
+
+.cc-starter-capability { min-height: 300px; }
+.cc-starter-capabilities__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+.cc-starter-pricing__grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 22px;
+}
+.cc-plan.cc-starter-plan { position: relative; min-height: 600px; height: auto; }
+.cc-starter-plan__flag {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 0 !important;
+	padding: 8px 12px;
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: .14em;
+	text-transform: uppercase;
+	color: #fff !important;
+	background: var(--cc-btn-fill);
+}
+.cc-starter-plan__setup { margin: 28px 0 0 !important; font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--cc-starter-ink) !important; }
+.cc-starter-pricing__note { max-width: 900px; margin: 56px auto 0; font-size: 13px; line-height: 1.7; color: var(--cc-starter-muted); }
+.cc-starter-definitions__list h3 { margin: 0 0 10px; }
+.cc-starter-definitions__list p { margin: 0 0 36px; line-height: 1.7; color: var(--cc-starter-muted); }
+
+.cc-starter-featured-quote .wp-block-quote { margin: 28px 0 0; }
+.cc-starter-featured-quote .wp-block-quote p { margin: 0; font-family: var(--wp--preset--font-family--cormorant); font-size: clamp(32px, 4.2vw, 62px); line-height: 1.18; color: var(--cc-starter-ink); }
+.cc-starter-featured-quote cite { display: block; margin-top: 30px; font-size: 11px; font-style: normal; letter-spacing: .15em; text-transform: uppercase; color: var(--wp--preset--color--cc-sage-ada); }
+.cc-quote.cc-starter-quote { min-height: 330px; height: auto; }
+
+.cc-starter-contact-hero { padding-top: clamp(96px, 10vw, 144px); }
+.cc-starter-contact-hero,
+.cc-starter-contact-hero h1 { color: #fff; }
+.cc-starter-contact-hero .cc-lead.cc-lead,
+.cc-starter-contact-hero .cc-eyebrow { color: rgba(255, 255, 255, .82); }
+.cc-starter-contact-hero__phone { margin-top: 44px; font-family: var(--wp--preset--font-family--cormorant); font-size: clamp(32px, 4vw, 52px); }
+.cc-starter-contact-hero__phone a { color: #fff; text-decoration: none; }
+.cc-starter-contact-hero__phone span { font-family: var(--wp--preset--font-family--montserrat); font-size: 11px; letter-spacing: .15em; text-transform: uppercase; }
+.cc-starter-contact-hero__form { padding: clamp(32px, 5vw, 56px); color: var(--cc-starter-ink); background: #fff; }
+.cc-starter-contact-hero__form .cc-eyebrow { color: var(--wp--preset--color--cc-sage-ada); }
+.cc-starter-offices__intro { align-items: end; margin-bottom: clamp(56px, 8vw, 104px); }
+.cc-starter-offices__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--cc-hairline); border-left: 1px solid var(--cc-hairline); }
+.cc-starter-office { min-height: 220px; padding: 34px; border-right: 1px solid var(--cc-hairline); border-bottom: 1px solid var(--cc-hairline); }
+.cc-starter-office__pin { margin: 0 0 24px; font-size: 12px; color: var(--wp--preset--color--cc-orange-ada); }
+.cc-starter-office h3 { margin: 0 0 16px; }
+.cc-starter-office p:last-child { margin: 0; font-size: 14px; line-height: 1.7; color: var(--cc-starter-muted); }
+
+.cc-starter-blog__tools { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(280px, .6fr); gap: 56px; align-items: end; margin-bottom: 72px; }
+.cc-starter-blog__tools .cc-section-head { margin: 0; }
+.cc-starter-blog__search .wp-block-search__label { display: block; margin-bottom: 10px; font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; }
+.cc-starter-blog__search .wp-block-search__inside-wrapper { border: 0; border-bottom: 1px solid var(--cc-hairline); }
+.cc-starter-blog__search .wp-block-search__input { padding: 14px 0; border: 0; }
+.cc-starter-blog__search .wp-block-search__button { color: var(--cc-starter-ink); background: transparent; }
+.cc-starter-blog__grid { gap: 28px; }
+.cc-starter-blog-card { height: 100%; padding-bottom: 32px; border-bottom: 1px solid var(--cc-hairline); }
+.cc-starter-blog-card__image { margin: 0 0 26px; overflow: hidden; background: var(--wp--preset--color--cc-tint); }
+.cc-starter-blog-card__image img { transition: transform .35s ease; }
+.cc-starter-blog-card:hover .cc-starter-blog-card__image img { transform: scale(1.03); }
+.cc-starter-blog-card__meta { display: inline-block; margin: 0 12px 12px 0; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--wp--preset--color--cc-sage-ada); }
+.cc-starter-blog-card h3 { margin: 0 0 14px; }
+.cc-starter-blog-card h3 a { color: var(--cc-starter-ink); text-decoration: none; }
+.cc-starter-blog-card .wp-block-post-excerpt { font-size: 14px; line-height: 1.65; color: var(--cc-starter-muted); }
+.cc-starter-blog-card__link { font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--wp--preset--color--cc-orange-ada); }
+.cc-starter-blog__pagination { margin-top: 64px; }
+
+.cc-hero--casi .cc-hero__media img { object-position: center; }
+.cc-hero--casi .cc-hero__person {
+	position: absolute;
+	right: clamp(5%, 9vw, 13%);
+	bottom: 0;
+	z-index: 2;
+	width: clamp(260px, 29vw, 470px);
+	margin: 0;
+}
+.cc-hero--casi .cc-hero__person figure { margin: 0; }
+.cc-hero--casi .cc-hero__person img { display: block; width: 100%; height: auto; }
+.cc-hero--casi .cc-hero__scrim { background: linear-gradient(90deg, rgba(21, 35, 31, .98) 0%, rgba(21, 35, 31, .92) 43%, rgba(21, 35, 31, .48) 67%, rgba(21, 35, 31, .12) 100%); }
+.cc-hero--casi .cc-hero__copy { max-width: 680px; }
+
+@media (max-width: 1100px) {
+	.cc-starter-capabilities__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	.cc-starter-pricing__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	.cc-hero--casi .cc-hero__person { right: -5%; opacity: .7; }
+}
+
+@media (max-width: 782px) {
+	.cc-starter-hero { min-height: 620px; padding-top: 112px; align-items: end; }
+	.cc-starter-hero::after { background: linear-gradient(0deg, rgba(22, 35, 31, .98) 0%, rgba(22, 35, 31, .88) 58%, rgba(22, 35, 31, .35) 100%); }
+	.cc-starter-hero__media img { object-position: 60% center; }
+	.cc-starter-stats .cc-grid--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	.cc-starter-founder__grid,
+	.cc-starter-book__grid,
+	.cc-starter-process__intro,
+	.cc-starter-process__item,
+	.cc-starter-blog__tools { grid-template-columns: 1fr; }
+	.cc-starter-process__item:nth-child(even) .cc-starter-process__title { order: 0; }
+	.cc-starter-founder__portrait { order: -1; }
+	.cc-starter-pricing__grid,
+	.cc-starter-capabilities__grid,
+	.cc-starter-offices__grid { grid-template-columns: 1fr; }
+	.cc-starter-plan { min-height: 0; }
+	.cc-starter-offices__grid { border-left: 0; }
+	.cc-starter-office { min-height: 0; border-left: 1px solid var(--cc-hairline); }
+	.cc-hero--casi .cc-hero__person { right: -30%; width: 74vw; opacity: .45; }
+	.cc-hero--casi .cc-hero__scrim { background: linear-gradient(0deg, rgba(21, 35, 31, .98) 0%, rgba(21, 35, 31, .94) 70%, rgba(21, 35, 31, .38) 100%); }
+}
+
+/* Shared hero repair. Keep this after variant/mobile rules so existing saved
+   starter blocks receive the same treatment as newly inserted patterns. */
+.wp-block-post-content > .cc-starter-page,
+.wp-block-post-content > .cc-hero,
+.wp-block-post-content > .cc-starter-hero,
+.cc-starter-page > .cc-starter-hero,
+.cc-starter-page > .cc-starter-contact-hero {
+	width: 100%;
+	max-width: none;
+}
+.cc-hero.cc-hero,
+.cc-starter-hero.cc-starter-hero,
+.cc-starter-contact-hero.cc-starter-contact-hero {
+	background-color: #fff !important; /* Overrides saved Gutenberg palette classes. */
+	color: var(--wp--preset--color--cc-deep);
+	text-align: left;
+	box-sizing: border-box;
+}
+
+/* Remove WordPress flow spacing and image intrinsic-size limits on background
+   layers only. The separate CAS-i portrait retains its own positioning. */
+.cc-hero > .cc-hero__media,
+.cc-starter-hero > .cc-starter-hero__media,
+.cc-hero > .cc-hero__scrim {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	max-width: none !important;
+	margin: 0 !important;
+}
+.cc-hero__media .wp-block-image,
+.cc-starter-hero__media .wp-block-image,
+.cc-hero__media .wp-block-image img,
+.cc-starter-hero__media .wp-block-image img {
+	display: block;
+	width: 100% !important;
+	height: 100% !important;
+	max-width: none;
+	margin: 0 !important;
+	object-fit: cover;
+}
+
+.cc-hero.cc-hero .cc-hero__scrim,
+.cc-starter-hero.cc-starter-hero::after {
+	background: linear-gradient(90deg, rgba(255,255,255,.98) 0%, rgba(255,255,255,.93) 35%, rgba(255,255,255,.55) 55%, rgba(255,255,255,.10) 76%, rgba(255,255,255,.03) 100%);
+}
+.cc-hero > .cc-hero__inner,
+.cc-starter-hero > .cc-starter-hero__copy {
+	flex: 1 1 100%;
+	min-width: 0;
+	width: 100%;
+	margin-block: 0;
+}
+.cc-hero .cc-hero__copy,
+.cc-starter-hero .cc-starter-hero__copy,
+.cc-starter-contact-hero .cc-starter-contact-hero__copy {
+	text-align: left;
+}
+.cc-hero .cc-hero__copy > *,
+.cc-starter-hero .cc-starter-hero__copy > * {
+	margin-inline-start: 0 !important;
+	margin-inline-end: auto !important;
+	text-align: left;
+}
+.cc-hero .cc-actions,
+.cc-starter-hero .cc-actions { justify-content: flex-start; }
+.cc-hero.cc-hero h1,
+.cc-hero.cc-hero h1 span,
+.cc-starter-hero .cc-starter-hero__copy h1,
+.cc-starter-contact-hero.cc-starter-contact-hero h1,
+.cc-starter-contact-hero .cc-starter-contact-hero__phone a {
+	color: var(--wp--preset--color--cc-deep);
+	text-shadow: none;
+}
+.cc-hero.cc-hero p:not(.cc-eyebrow):not(.cc-lead),
+.cc-hero.cc-hero .cc-lead.cc-lead,
+.cc-hero.cc-hero .cc-eyebrow.cc-eyebrow,
+.cc-starter-hero .cc-starter-hero__copy .cc-lead.cc-lead,
+.cc-starter-hero .cc-starter-hero__copy .cc-eyebrow,
+.cc-starter-contact-hero.cc-starter-contact-hero .cc-lead.cc-lead,
+.cc-starter-contact-hero.cc-starter-contact-hero .cc-eyebrow {
+	color: var(--wp--preset--color--cc-deep);
+}
+.cc-hero .cc-btn--ghost .wp-block-button__link,
+.cc-starter-hero .cc-btn--ghost .wp-block-button__link,
+.cc-hero .cc-btn--ghost .wp-block-button__link:hover,
+.cc-starter-hero .cc-btn--ghost .wp-block-button__link:hover {
+	color: var(--wp--preset--color--cc-deep);
+	border-color: currentColor;
+	background: #fff;
+}
+
+.cc-starter-hero .cc-hero__trust {
+	max-width: 720px;
+	margin-top: 22px !important;
+	font-size: 0.78rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	line-height: 1.45;
+	text-transform: uppercase;
+	color: var(--wp--preset--color--cc-deep) !important;
+}
+
+/* Keep every editable starter hero concise enough for its complete call to
+   action group to be visible when a page opens. Content can still expand the
+   section on unusually short screens, preventing hidden or clipped controls. */
+.cc-starter-hero.cc-starter-hero {
+	min-height: clamp(500px, calc(100svh - 80px), 680px);
+	padding-block: clamp(48px, 5vw, 72px);
+}
+.cc-starter-hero .cc-starter-hero__copy h1 { margin-bottom: 18px; }
+.cc-starter-hero .cc-starter-hero__copy .cc-lead { margin-bottom: 20px; }
+.cc-starter-hero .cc-actions { margin-top: 0; }
+.cc-starter-hero .cc-hero__trust { margin-top: 16px !important; }
+
+@media (max-width: 782px) {
+	.cc-starter-hero.cc-starter-hero {
+		min-height: 0;
+		padding-block: 48px 44px;
+		align-items: center;
+	}
+	.cc-starter-hero .cc-starter-hero__copy h1 { margin-bottom: 16px; }
+	.cc-starter-hero .cc-starter-hero__copy .cc-lead { margin-bottom: 18px; }
+	.cc-starter-hero .cc-hero__trust { margin-top: 14px !important; }
+}
+/* Keep the homepage opening action visible with the same compact viewport-aware rhythm. */
+.cc-hero.cc-hero {
+	min-height: clamp(500px, calc(100svh - 80px), 680px);
+	padding-block: clamp(48px, 5vw, 72px);
+}
+.cc-hero .cc-hero__copy h1 { margin-bottom: 18px; }
+.cc-hero .cc-hero__copy .cc-lead { margin-bottom: 20px; }
+.cc-hero .cc-actions { margin-top: 0; }
+@media (max-width: 782px) {
+	.cc-hero.cc-hero {
+		min-height: 0;
+		padding-block: 48px 44px;
+		align-items: center;
+	}
+	.cc-hero .cc-hero__copy h1 { margin-bottom: 16px; }
+	.cc-hero .cc-hero__copy .cc-lead { margin-bottom: 18px; }
+}
+
+/* The homepage message is intentionally long, so use a compact display scale to keep its actions visible. */
+.cc-hero.cc-hero .cc-hero__copy { max-width: 760px; }
+.cc-hero.cc-hero .cc-hero__copy h1 {
+	font-size: clamp(44px, 3.4vw, 54px) !important;
+	line-height: 1.04 !important;
+}
+.cc-hero.cc-hero .cc-hero__copy .cc-lead {
+	font-size: 16px;
+	line-height: 1.45;
+}
+@media (max-width: 782px) {
+	.cc-hero.cc-hero .cc-hero__copy h1 { font-size: clamp(36px, 9.5vw, 46px) !important; }
+	.cc-hero.cc-hero .cc-hero__copy .cc-lead { font-size: 15px; line-height: 1.42; }
+}
+/* The first homepage action uses the base cc-btn class, so give it an explicit visible fill. */
+.cc-hero .cc-btn:not(.cc-btn--ghost) .wp-block-button__link {
+	color: #fff;
+	background: var(--cc-btn-fill);
+	border-color: var(--cc-btn-fill);
+}
+/* Keep full-width backgrounds while giving every content container a calm readable inset. */
+.cc-container,
+.cc-hero__inner {
+	box-sizing: border-box;
+	padding-inline: clamp(24px, 2.5vw, 48px);
+}
+@media (max-width: 782px) {
+	.cc-container,
+	.cc-hero__inner { padding-inline: 24px; }
+}
+/* The live CAS-i panel supplies the concierge on the homepage. The original
+   hero portrait is therefore removed, leaving the supplied office photograph
+   as the only visual behind the copy. */
+.cc-hero--casi .cc-hero__media {
+	background: center / cover no-repeat url("../images/home-hero-office.png");
+}
+.cc-hero--casi .cc-hero__media img,
+.cc-hero--casi .cc-hero__person {
+	display: none;
+}
+@media (max-width: 782px) {
+	.cc-hero.cc-hero .cc-hero__scrim,
+	.cc-starter-hero.cc-starter-hero::after {
+		background: rgba(255,255,255,.94);
+	}
+}
+
+/* ------------------------------------------------ industry landing pages --- */
+
+/* Illustrated ledger hero: white page, fine sage grid that fades downward, copy
+   left and a line illustration right. Deliberately unlike the photographic and
+   .cc-hero--light openers. Used by the industry landing pages. */
+.cc-hero-ledger { position: relative; background: #fff; overflow: hidden; }
+.cc-hero-ledger::before {
+	content: ""; position: absolute; inset: 0; pointer-events: none;
+	background-image: linear-gradient(rgba(106, 144, 130, .10) 1px, transparent 1px), linear-gradient(90deg, rgba(106, 144, 130, .10) 1px, transparent 1px);
+	background-size: 24px 24px; background-position: -1px -1px;
+	-webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, .85) 45%, transparent 100%);
+	mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, .85) 45%, transparent 100%);
+}
+.cc-hero-ledger__inner {
+	position: relative; box-sizing: border-box; width: 100%; max-width: var(--cc-max); margin-inline: auto;
+	padding-block: clamp(56px, 8vw, 120px); padding-inline: var(--cc-gutter);
+	display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: clamp(32px, 5vw, 80px); align-items: center;
+}
+.cc-hero-ledger__copy > :first-child { margin-top: 0; }
+.cc-hero-ledger h1.wp-block-heading { color: var(--wp--preset--color--cc-dark); line-height: 1.08; max-width: 700px; margin: 0; }
+/* The preset class sets font-size with !important, so the hero size needs to as well. */
+.cc-hero-ledger h1.wp-block-heading.has-h-1-font-size { font-size: clamp(32px, 3.9vw, 60px) !important; }
+.cc-hero-ledger .cc-lead.cc-lead { margin: 28px 0 0; max-width: 620px; color: var(--wp--preset--color--cc-muted); }
+.cc-hero-ledger__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; margin-top: 40px; }
+.cc-hero-ledger__actions .wp-block-buttons { margin: 0; }
+.cc-hero-ledger__call { margin: 0; font-size: 14px; color: var(--wp--preset--color--cc-muted); }
+.cc-hero-ledger__call a { color: var(--wp--preset--color--cc-dark); text-decoration: none; border-bottom: 1px solid var(--wp--preset--color--cc-sage); white-space: nowrap; }
+.cc-hero-ledger__call a:hover { border-bottom-color: var(--wp--preset--color--cc-orange); }
+.cc-hero-ledger__trust { margin: 24px 0 0; max-width: 560px; font-size: 13px; line-height: 1.6; color: var(--wp--preset--color--cc-muted); }
+.cc-hero-ledger__art { margin: 0; }
+.cc-hero-ledger__art img { display: block; width: 100%; height: auto; max-width: 520px; margin-left: auto; }
+@media (max-width: 900px) {
+	.cc-hero-ledger__inner { grid-template-columns: minmax(0, 1fr); }
+	.cc-hero-ledger__art img { max-width: 340px; margin-left: 0; }
+}
+@media (max-width: 600px) {
+	.cc-hero-ledger__art img { max-width: 280px; }
+	.cc-hero-ledger__actions .wp-block-buttons, .cc-hero-ledger__actions .wp-block-button { width: 100%; }
+	.cc-hero-ledger__actions .wp-block-button__link { display: block; text-align: center; }
+}
+
+/* Trust strip. */
+.cc-ind-trust { background: var(--wp--preset--color--cc-tint); padding: 24px var(--cc-gutter); border-block: 1px solid var(--cc-hairline); }
+.cc-ind-trust__list { max-width: var(--cc-max); margin-inline: auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 40px; }
+.cc-ind-trust__list p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--wp--preset--color--cc-dark); position: relative; padding-left: 16px; }
+.cc-ind-trust__list p::before { content: ""; position: absolute; left: 0; top: .55em; width: 6px; height: 6px; background: var(--wp--preset--color--cc-orange); border-radius: 50%; }
+
+/* Problem statement. */
+.cc-ind-problem__cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 64px; margin-top: var(--cc-rhythm-block); }
+.cc-ind-problem__cols p { margin: 0; font-size: 16px; line-height: 1.7; color: var(--wp--preset--color--cc-muted); }
+.cc-ind-callout { margin-top: var(--cc-rhythm-block); padding: clamp(28px, 3.5vw, 48px); background: var(--wp--preset--color--cc-tint); border-left: 3px solid var(--wp--preset--color--cc-orange); }
+.cc-ind-callout__lead { margin: 0 0 16px; font-size: clamp(20px, 1.8vw, 26px); font-weight: 500; line-height: 1.35; color: var(--wp--preset--color--cc-dark); }
+.cc-ind-callout p:not(.cc-ind-callout__lead) { margin: 0; max-width: 760px; font-size: 15px; line-height: 1.7; color: var(--wp--preset--color--cc-muted); }
+@media (max-width: 782px) { .cc-ind-problem__cols { grid-template-columns: minmax(0, 1fr); } }
+
+/* Feature cards. */
+.cc-ind-pillars { display: flex; flex-wrap: wrap; gap: 8px 12px; margin-top: 24px; }
+.cc-ind-pillars p { margin: 0; padding: 6px 14px; border: 1px solid var(--cc-hairline); font-size: 11px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--wp--preset--color--cc-sage-ada); }
+.cc-ind-features__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 24px; }
+.cc-ind-tag.cc-ind-tag { margin: 0 0 16px; font-size: 11px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--wp--preset--color--cc-orange-ada); }
+.cc-ind-features__grid .cc-card__icon--round { margin-bottom: 20px; }
+.cc-ind-features__grid .cc-card__icon svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Team band. */
+.cc-ind-team .cc-section-head { margin-bottom: clamp(32px, 4vw, 56px); }
+.cc-ind-statement { margin: 0 0 clamp(32px, 4vw, 56px); font-family: var(--wp--preset--font-family--cormorant); font-weight: 300; font-size: clamp(28px, 3.4vw, 46px); line-height: 1.15; letter-spacing: -.01em; max-width: 900px; }
+.cc-ind-statement .cc-accent { color: var(--wp--preset--color--cc-orange); font-style: italic; }
+.cc-ind-team__intro { max-width: 760px; margin: 0 0 clamp(32px, 4vw, 56px); font-size: 16px; line-height: 1.7; }
+.cc-ind-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 2px; }
+.cc-ind-tiles > .cc-tile { border-top: 3px solid var(--wp--preset--color--cc-sage); }
+.cc-ind-tiles > .cc-tile:first-child { border-top-color: var(--wp--preset--color--cc-orange); }
+.cc-ind-tiles .cc-tile h3 { margin: 0 0 8px; font-size: 22px; line-height: 1.3; }
+.cc-ind-tiles .cc-tile p:last-child { font-size: 14px; line-height: 1.6; color: rgba(255, 255, 255, .85); }
+
+/* CAS-i questions. */
+.cc-ind-casi .cc-rule { margin-bottom: 0; }
+.cc-ind-casi__asks { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 16px; margin-top: var(--cc-rhythm-block); text-align: left; }
+.cc-ind-ask { background: #fff; border: 1px solid var(--cc-hairline); padding: 24px; }
+.cc-ind-ask p { margin: 0; font-size: 15px; line-height: 1.5; color: var(--wp--preset--color--cc-dark); }
+.cc-ind-ask p.cc-ind-ask__label { margin-bottom: 8px; font-size: 11px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--wp--preset--color--cc-orange-ada); }
+
+/* Plan cards. */
+.cc-ind-plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 24px; align-items: stretch; }
+.cc-ind-plan { background: #fff; border: 1px solid var(--cc-hairline); padding: 36px 32px; display: flex; flex-direction: column; gap: 8px; }
+.cc-ind-plan.cc-ind-plan--pick { border: 2px solid var(--wp--preset--color--cc-orange); }
+.cc-ind-plan p { margin: 0; }
+.cc-ind-plan .cc-ind-tag { margin: 0; }
+.cc-ind-plan h3 { margin: 0; }
+.cc-ind-plan__price { font-size: clamp(32px, 3vw, 42px); font-weight: 300; line-height: 1.1; color: var(--wp--preset--color--cc-dark); }
+.cc-ind-plan__price small { font-size: 13px; font-weight: 400; color: var(--wp--preset--color--cc-muted); margin-left: 6px; }
+.cc-ind-plan__setup { font-size: 13px; color: var(--wp--preset--color--cc-muted); }
+.cc-ind-plan__fit { font-size: 14px; line-height: 1.6; color: var(--wp--preset--color--cc-muted); margin-top: 8px !important; }
+.cc-ind-plan ul { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 10px; text-align: left; }
+.cc-ind-plan li { position: relative; padding-left: 20px; font-size: 14px; line-height: 1.5; color: var(--wp--preset--color--cc-dark); }
+.cc-ind-plan li::before { content: ""; position: absolute; left: 0; top: .5em; width: 8px; height: 8px; border-radius: 50%; background: var(--wp--preset--color--cc-sage); }
+.cc-ind-plan-note { margin: 32px 0 0; max-width: 820px; font-size: 14px; line-height: 1.7; color: var(--wp--preset--color--cc-muted); }
+.cc-ind-plan-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; margin-top: 32px; }
+.cc-ind-plan-cta .wp-block-buttons { margin: 0; }
+.cc-ind-plan-cta p { margin: 0; font-size: 14px; color: var(--wp--preset--color--cc-muted); }
+
+/* Client quotes. */
+.cc-ind-quotes .cc-quote--featured { margin-bottom: 24px; }
+.cc-ind-quotes .cc-grid--2 { gap: 20px; }
+
+/* FAQ spacing inside industry pages. */
+.cc-ind-faq .cc-section-head { margin-bottom: clamp(32px, 4vw, 56px); }
+
+/* Serif headings on the industry landing pages. Cormorant Garamond reads smaller
+   than Montserrat at the same size, so sizes are raised to keep the hierarchy. */
+.cc-starter-page--industry :is(h1, h2, h3),
+.cc-starter-page--industry .cc-faq__item summary {
+	font-family: var(--wp--preset--font-family--cormorant);
+	letter-spacing: -0.01em;
+}
+.cc-starter-page--industry h1.wp-block-heading.has-h-1-font-size { font-size: clamp(38px, 4.6vw, 70px) !important; font-weight: 400; line-height: 1.04; }
+.cc-starter-page--industry h2.wp-block-heading.has-h-2-font-size { font-size: clamp(36px, 5vw, 64px) !important; font-weight: 400; line-height: 1.12; }
+.cc-starter-page--industry h3.wp-block-heading { font-size: clamp(24px, 2vw, 28px) !important; font-weight: 500; line-height: 1.2; }
+.cc-starter-page--industry .cc-faq__item summary { font-size: clamp(20px, 1.8vw, 24px); font-weight: 500; }
+.cc-starter-page--industry .cc-ind-tiles .cc-tile h3 { font-size: clamp(24px, 2vw, 28px) !important; }
+/* Spacing for the industry pages. WordPress zeroes the margin of every block
+   inside a flow-layout Group with `:root :where(.is-layout-flow) > *`, which has
+   the same specificity as a single class. These rules carry the page class as a
+   prefix so they win regardless of stylesheet order. */
+.cc-starter-page--industry .cc-section-head { margin-bottom: var(--cc-rhythm-head); }
+.cc-starter-page--industry .cc-ind-team .cc-section-head { margin-bottom: clamp(32px, 4vw, 56px); }
+.cc-starter-page--industry .cc-section-head h2 + p { margin-top: var(--cc-rhythm-block); }
+.cc-starter-page--industry .cc-hero-ledger .cc-lead { margin-top: 28px; }
+.cc-starter-page--industry .cc-hero-ledger__actions { margin-top: 40px; }
+.cc-starter-page--industry .cc-hero-ledger__trust { margin-top: 24px; }
+.cc-starter-page--industry .cc-ind-pillars { margin-top: 24px; }
+.cc-starter-page--industry .cc-ind-problem__cols { margin-top: var(--cc-rhythm-block); }
+.cc-starter-page--industry .cc-ind-callout { margin-top: var(--cc-rhythm-block); }
+.cc-starter-page--industry .cc-ind-callout__lead { margin-bottom: 16px; }
+.cc-starter-page--industry p.cc-ind-statement { margin-bottom: clamp(32px, 4vw, 56px); line-height: 1.15; }
+.cc-starter-page--industry .cc-ind-team__intro { margin-bottom: clamp(32px, 4vw, 56px); }
+.cc-starter-page--industry .cc-ind-casi__asks { margin-top: var(--cc-rhythm-block); }
+.cc-starter-page--industry .cc-ind-plan-note { margin-top: 32px; }
+.cc-starter-page--industry .cc-ind-plan-cta { margin-top: 32px; }
+.cc-starter-page--industry .cc-ind-quotes .cc-quote--featured { margin-bottom: 24px; }
+.cc-starter-page--industry .cc-ind-plan ul { margin-top: 12px; }
+.cc-starter-page--industry .cc-ind-plan .cc-ind-plan__fit { margin-top: 8px; }
+
+/* Step numerals: smaller, and the title leaves room so the two never overlap. */
+.cc-starter-page--industry .cc-how .cc-step__num { top: 16px; right: 20px; font-size: clamp(32px, 3vw, 44px); }
+.cc-starter-page--industry .cc-how .cc-step h3 { padding-right: 56px; }
+/* Quote cards default to the same grey as this section, so they vanish. Make them white cards. */
+.cc-starter-page--industry .cc-ind-quotes .cc-quote { background: #fff; border: 1px solid var(--cc-hairline); }
+.cc-starter-page--industry .cc-ind-quotes .cc-quote__text { margin: 0; }
+
+/* November founder-story page: use the existing theme palette, type and rhythm. */
+.cc-starter-page--about-story :is(h1, h2, h3) { font-family: var(--wp--preset--font-family--cormorant); font-weight: 400; letter-spacing: -.01em; }
+.cc-starter-page--construction :is(ul, ol) { text-align: left; }
+.cc-starter-page--about-story .cc-about-story-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(32px, 6vw, 96px); align-items: center; }
+.cc-starter-page--about-story .cc-about-story-grid > * { min-width: 0; }
+.cc-starter-page--about-story .cc-about-story-copy > * + * { margin-top: 24px; }
+.cc-starter-page--about-story .cc-about-story-copy h3 { margin-top: 48px; }
+.cc-starter-page--about-story .cc-about-story-copy h1, .cc-starter-page--about-story .cc-about-story-copy h2, .cc-starter-page--about-story .cc-about-story-copy h3 { color: var(--wp--preset--color--cc-dark); }
+.cc-starter-page--about-story .cc-about-story-copy h1 { font-size: clamp(36px, 4.6vw, 68px); line-height: 1.12; }
+.cc-starter-page--about-story h2 { font-size: clamp(32px, 4vw, 56px); line-height: 1.15; }
+.cc-starter-page--about-story h3 { font-size: clamp(24px, 2.2vw, 32px); line-height: 1.25; }
+.cc-starter-page--about-story p { color: var(--wp--preset--color--cc-muted); line-height: 1.8; }
+.cc-starter-page--about-story .cc-eyebrow { color: var(--wp--preset--color--cc-sage-ada); }
+.cc-starter-page--about-story em { color: var(--wp--preset--color--cc-sage-ada); }
+.cc-starter-page--about-story figure { margin: 0; }
+.cc-starter-page--about-story figure img { display: block; width: 100%; height: auto; }
+.cc-starter-page--about-story .cc-actions { margin-top: 32px; }
+.cc-starter-page--about-story .cc-about-story-hero, .cc-starter-page--about-story .cc-about-story-beliefs, .cc-starter-page--about-story .cc-about-story-next { background: var(--wp--preset--color--cc-light); }
+.cc-starter-page--about-story .cc-about-story-portrait img { aspect-ratio: 4 / 5; object-fit: cover; object-position: bottom; }
+.cc-starter-page--about-story .cc-about-story-grid--origin { grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); align-items: start; }
+.cc-starter-page--about-story .cc-about-story-office { position: sticky; top: 120px; }
+.cc-starter-page--about-story .cc-about-story-office img { aspect-ratio: 4 / 3; object-fit: cover; }
+.cc-starter-page--about-story .cc-about-story-quote, .cc-starter-page--about-story .cc-about-story-journey { background: var(--wp--preset--color--cc-dark); color: #fff; }
+.cc-starter-page--about-story .cc-about-story-quote h2, .cc-starter-page--about-story .cc-about-story-journey h2, .cc-starter-page--about-story .cc-about-story-journey h3 { color: #fff; }
+.cc-starter-page--about-story .cc-about-story-quote p, .cc-starter-page--about-story .cc-about-story-journey p { color: rgba(255, 255, 255, .85); }
+.cc-starter-page--about-story .cc-about-story-quote .cc-eyebrow, .cc-starter-page--about-story .cc-about-story-journey .cc-eyebrow,
+.cc-starter-page--about-story .cc-about-story-quote em, .cc-starter-page--about-story .cc-about-story-journey em { color: var(--wp--preset--color--cc-light); }
+.cc-starter-page--about-story .cc-about-story-hammock img { aspect-ratio: 3 / 2; object-fit: cover; }
+.cc-starter-page--about-story .cc-about-story-belief-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 64px; margin-top: 56px; }
+.cc-starter-page--about-story .cc-about-story-belief { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 24px; padding-block: 40px; border-top: 1px solid var(--cc-hairline); }
+.cc-starter-page--about-story .cc-about-story-belief .cc-about-story-number { font-family: var(--wp--preset--font-family--cormorant); font-size: 40px; line-height: 1; color: var(--wp--preset--color--cc-sage-ada); }
+.cc-starter-page--about-story .cc-about-story-testimonial { padding: clamp(24px, 4vw, 56px); margin-top: 48px; background: #fff; }
+.cc-starter-page--about-story .cc-about-story-testimonial > * + *, .cc-starter-page--about-story .cc-about-story-close .cc-container > * + * { margin-top: 24px; }
+.cc-starter-page--about-story .cc-about-story-quote-text { font-family: var(--wp--preset--font-family--cormorant); font-size: clamp(28px, 3vw, 42px); line-height: 1.3; color: var(--wp--preset--color--cc-dark); }
+.cc-starter-page--about-story .cc-about-story-timeline { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 32px; margin-top: 64px; }
+.cc-starter-page--about-story .cc-about-story-milestone { border-top: 1px solid rgba(255, 255, 255, .3); padding-top: 24px; }
+.cc-starter-page--about-story .cc-about-story-milestone > * + * { margin-top: 16px; }
+.cc-starter-page--about-story .cc-about-story-milestone p:not(.cc-eyebrow) { font-size: 14px; }
+.cc-starter-page--about-story .cc-about-story-grid--book { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
+.cc-starter-page--about-story .cc-about-story-book-cover { width: min(100%, 360px); justify-self: center; }
+@media (max-width: 1023px) {
+ .cc-starter-page--about-story .cc-about-story-timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 767px) {
+ .cc-starter-page--about-story .cc-about-story-grid, .cc-starter-page--about-story .cc-about-story-grid--origin, .cc-starter-page--about-story .cc-about-story-grid--book,
+ .cc-starter-page--about-story .cc-about-story-belief-grid, .cc-starter-page--about-story .cc-about-story-timeline { grid-template-columns: minmax(0, 1fr); }
+ .cc-starter-page--about-story .cc-about-story-grid { gap: 32px; }
+ /* Let the story image take its natural height. No desktop sticky offset or empty image column on phones. */
+ .cc-starter-page--about-story .cc-about-story-office { position: static; }
+ .cc-starter-page--about-story .cc-about-story-origin .cc-about-story-grid { gap: 24px; }
+ .cc-starter-page--about-story .cc-about-story-portrait { max-width: 480px; width: 100%; justify-self: center; }
+ .cc-starter-page--about-story .cc-about-story-belief { gap: 16px; grid-template-columns: 36px minmax(0, 1fr); }
+}
+
+/* Keep the widget's tap-to-open dock on phones rotated into landscape too.
+   Its loader switches to desktop at 560px, even on a short touch screen.
+   !important also wins over the loader's later-injected CSS and inline sizing. */
+@media (max-width: 1024px) and (pointer: coarse), (max-height: 600px) and (pointer: coarse) {
+ #casi-panel { display: none !important; }
+ #casi-launcher-wrap { display: flex !important; }
+ #casi-launcher-wrap.casi-launcher-hidden { display: none !important; }
+ #casi-panel.casi-expanded {
+  display: block !important;
+  top: auto !important; left: auto !important;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important;
+  right: calc(12px + env(safe-area-inset-right, 0px)) !important;
+  width: min(280px, calc(100vw - 24px), 36dvh) !important;
+  height: auto !important; aspect-ratio: 2 / 3;
+  max-height: 55dvh !important;
+ }
+ #casi-panel.casi-booking {
+  display: block !important;
+  inset: 8px !important; width: auto !important;
+  height: calc(100dvh - 16px) !important;
+  max-height: none !important; aspect-ratio: auto;
+ }
+ #casi-panel #casi-mobile-close { display: flex !important; }
+}
