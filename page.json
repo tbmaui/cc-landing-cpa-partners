@@ -1,0 +1,11 @@
+{
+  "page": "CPA Partners",
+  "repository": "tbmaui/cc-landing-cpa-partners",
+  "source_file": "CC Partner Landing Page -  CPA.html",
+  "source_sha256": "0652ba0471d8c9fe68024fabf67661113086853578ddf81859894e91a4841d0c",
+  "wordpress_pattern": null,
+  "wordpress_status": "not-present-in-supplied-workspace",
+  "theme_dependency": null,
+  "review_date": "2026-11-10",
+  "prototype_repository": null
+}
