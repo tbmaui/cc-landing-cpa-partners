@@ -1,5 +1,9 @@
 # Complete Controller ? CPA Partners
 
+[View page in your browser](https://tbmaui.github.io/cc-landing-cpa-partners/)
+
+Open the link above to see the styled HTML page with its bundled fonts and images. No download or HTML viewer is needed.
+
 This page is available in **WordPress and plain HTML**, based on the reviewed cc-modern 1.3.14 theme styling.
 
 [Download both formats from the latest release](https://github.com/tbmaui/cc-landing-cpa-partners/releases/latest).
@@ -42,3 +46,7 @@ The first two commands validate Gutenberg comments and create an ignored native 
 The WordPress patterns were inspected in the actual WordPress 6.6.3 editor. HTML layout checks cover 390, 768, 1024, 1440 and 1920px, with no horizontal overflow, broken images or JavaScript errors. Embedding checks confirm the page CSS does not change surrounding host text/layout. The CPA calculator/dialog and consultation request behavior were exercised without sending real leads.
 
 See `html/README.md` for asset paths, supported embedding and launch configuration. Follow `WRITING-STYLE.md` for copy changes.
+
+## Browser preview
+
+GitHub Pages publishes the tracked `html/` export whenever that folder changes on `main`. You can also republish it from Actions > Publish page preview > Run workflow. The preview includes a noindex directive to discourage search indexing. It uses the standalone page content described above.
