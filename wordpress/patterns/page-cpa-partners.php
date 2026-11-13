@@ -18,6 +18,8 @@
 <section class="wp-block-group cc-hero cc-hero--light">
 <!-- wp:html -->
 <div class="cc-hero__content cc-section--dots" style="position:relative">
+<div class="cc-hero__split">
+<div class="cc-hero__text">
 <span class="cc-hero__eyebrow">CPA Partner Program</span>
 <h1 class="cc-h1">Your clients' books,<br class="hide-sm"/> tax-ready<br class="hide-sm"/> all year long.</h1>
 <div class="cc-hero__copy">
@@ -29,6 +31,9 @@
 <button class="cc-btn cc-btn--outline" data-refer="" type="button">Refer a Client Now</button>
 </div>
 <a class="cc-link" href="#estimate">Estimate your commission <span aria-hidden="true">→</span></a>
+</div>
+<figure class="cc-hero__art"><img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/industry-cpa-partners.svg' ); ?>" alt="Complete Controller CPA Partner network effect illustration: two professionals shaking hands backed by an expanding network of partners and client referrals" width="480" height="400"/></figure>
+</div>
 </div>
 <!-- /wp:html -->
 </section>
