@@ -64,7 +64,7 @@ function cc_modern_enqueue_assets() {
 	wp_enqueue_style( 'cc-modern-cpa', CC_MODERN_URI . '/assets/css/cpa-partners.css', array( 'cc-modern-theme' ), CC_MODERN_VERSION );
 	wp_enqueue_script( 'cc-modern-cpa', CC_MODERN_URI . '/assets/js/cpa-partners.js', array(), CC_MODERN_VERSION, array( 'strategy' => 'defer', 'in_footer' => true ) );
 
-	// The orbdust shell — and its extra webfont — only load where it is used.
+	// The orbdust shell — and its styles — only load where it is used.
 	if ( cc_modern_is_legacy_template() ) {
 		wp_enqueue_style(
 			'cc-modern-legacy',
@@ -90,12 +90,12 @@ function cc_modern_is_legacy_template() {
 }
 
 /**
- * Preload the two self-hosted variable fonts.
+ * Preload the two self-hosted brand fonts.
  *
  * Both are used above the fold on every page, so the round trip is worth removing.
  */
 function cc_modern_preload_fonts() {
-	$fonts = array( 'montserrat-var.woff2', 'cormorant-var.woff2' );
+	$fonts = array( 'montserrat-var.woff2', 'oldstandard-400.woff2' );
 
 	foreach ( $fonts as $font ) {
 		printf(

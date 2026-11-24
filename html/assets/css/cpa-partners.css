@@ -4,9 +4,10 @@
 #cc-html-cc-landing-cpa-partners *,
 #cc-html-cc-landing-cpa-partners *::before,
 #cc-html-cc-landing-cpa-partners *::after { box-sizing: border-box; }
-@font-face{font-family:"Montserrat";font-weight:100 900;font-style:normal;font-display:swap;src:url("../fonts/montserrat-var.woff2") format("woff2")}
-@font-face{font-family:"Cormorant Garamond";font-weight:300 700;font-style:normal;font-display:swap;src:url("../fonts/cormorant-var.woff2") format("woff2")}
-@font-face{font-family:"Cormorant Garamond";font-weight:300 700;font-style:italic;font-display:swap;src:url("../fonts/cormorant-var-italic.woff2") format("woff2")}
+@font-face{font-family:"Montserrat";font-weight:100 900;font-style:normal;font-display:swap;src:url("../fonts/cpa-partners-montserrat-var.woff2") format("woff2")}
+@font-face{font-family:"Old Standard TT";font-weight:400;font-style:normal;font-display:swap;src:url("../fonts/cpa-partners-oldstandard-400.woff2") format("woff2")}
+@font-face{font-family:"Old Standard TT";font-weight:700;font-style:normal;font-display:swap;src:url("../fonts/cpa-partners-oldstandard-700.woff2") format("woff2")}
+@font-face{font-family:"Old Standard TT";font-weight:400;font-style:italic;font-display:swap;src:url("../fonts/cpa-partners-oldstandard-400-italic.woff2") format("woff2")}
 #cc-html-cc-landing-cpa-partners {
 --wp--preset--color--white: #ffffff;
 --wp--preset--color--cc-light: #f6f6f6;
@@ -34,9 +35,8 @@
 --wp--preset--font-size--h2-lg: clamp(36px, 4.45vw, 64px);
 --wp--preset--font-size--h1: clamp(36px, 5.5vw, 80px);
 --wp--preset--font-size--display: clamp(36px, 7vw, 96px);
---wp--preset--font-family--montserrat: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
---wp--preset--font-family--cormorant: "Cormorant Garamond", "Times New Roman", Georgia, serif;
---wp--preset--font-family--helvetica: "Helvetica Neue", Helvetica, Arial, sans-serif;
+--wp--preset--font-family--montserrat: Montserrat, sans-serif;
+--wp--preset--font-family--old-standard: "Old Standard TT", serif;
 --wp--preset--spacing--10: 2px;
 --wp--preset--spacing--20: 4px;
 --wp--preset--spacing--30: 8px;
@@ -92,9 +92,8 @@
 #cc-html-cc-landing-cpa-partners .has-h-1-font-size {font-size:var(--wp--preset--font-size--h1) !important}
 #cc-html-cc-landing-cpa-partners .has-display-font-size {font-size:var(--wp--preset--font-size--display) !important}
 #cc-html-cc-landing-cpa-partners .has-montserrat-font-family {font-family:var(--wp--preset--font-family--montserrat) !important}
-#cc-html-cc-landing-cpa-partners .has-cormorant-font-family {font-family:var(--wp--preset--font-family--cormorant) !important}
-#cc-html-cc-landing-cpa-partners .has-helvetica-font-family {font-family:var(--wp--preset--font-family--helvetica) !important}
-#cc-html-cc-landing-cpa-partners {font-family:var(--wp--preset--font-family--helvetica);font-size:var(--wp--preset--font-size--body);font-weight:400;line-height:1.6;color:var(--wp--preset--color--cc-dark);background-color:var(--wp--preset--color--white);padding-top:0;padding-right:0;padding-bottom:0;padding-left:0}
+#cc-html-cc-landing-cpa-partners .has-old-standard-font-family {font-family:var(--wp--preset--font-family--old-standard) !important}
+#cc-html-cc-landing-cpa-partners {font-family:var(--wp--preset--font-family--montserrat);font-size:var(--wp--preset--font-size--body);font-weight:400;line-height:1.6;color:var(--wp--preset--color--cc-dark);background-color:var(--wp--preset--color--white);padding-top:0;padding-right:0;padding-bottom:0;padding-left:0}
 #cc-html-cc-landing-cpa-partners h1,
 #cc-html-cc-landing-cpa-partners h2,
 #cc-html-cc-landing-cpa-partners h3,
@@ -105,15 +104,15 @@
 #cc-html-cc-landing-cpa-partners h2 {font-size:var(--wp--preset--font-size--h2);font-weight:300;line-height:1.2;letter-spacing:-0.01em}
 #cc-html-cc-landing-cpa-partners h3 {font-size:var(--wp--preset--font-size--card);font-weight:300;line-height:1.25;letter-spacing:-0.02em;color:var(--wp--preset--color--cc-deep)}
 #cc-html-cc-landing-cpa-partners h4 {font-size:var(--wp--preset--font-size--card-sm);font-weight:500;line-height:1.3;letter-spacing:-0.01em}
-#cc-html-cc-landing-cpa-partners h5 {font-family:var(--wp--preset--font-family--helvetica);font-size:var(--wp--preset--font-size--btn);font-weight:500;line-height:1.6;letter-spacing:0.14em;text-transform:uppercase}
-#cc-html-cc-landing-cpa-partners h6 {font-family:var(--wp--preset--font-family--helvetica);font-size:var(--wp--preset--font-size--eyebrow);font-weight:500;line-height:1.6;letter-spacing:0.24em;text-transform:uppercase;color:var(--wp--preset--color--cc-sage)}
+#cc-html-cc-landing-cpa-partners h5 {font-family:var(--wp--preset--font-family--montserrat);font-size:var(--wp--preset--font-size--btn);font-weight:500;line-height:1.6;letter-spacing:0.14em;text-transform:uppercase}
+#cc-html-cc-landing-cpa-partners h6 {font-family:var(--wp--preset--font-family--montserrat);font-size:var(--wp--preset--font-size--eyebrow);font-weight:500;line-height:1.6;letter-spacing:0.24em;text-transform:uppercase;color:var(--wp--preset--color--cc-sage)}
 #cc-html-cc-landing-cpa-partners a:where(:not(.wp-element-button)) {text-decoration:none;color:var(--wp--preset--color--cc-orange-ada)}
 #cc-html-cc-landing-cpa-partners .wp-element-button,
-#cc-html-cc-landing-cpa-partners .wp-block-button__link {font-family:var(--wp--preset--font-family--helvetica);font-size:var(--wp--preset--font-size--btn);font-weight:500;line-height:1;letter-spacing:0.14em;text-transform:uppercase;color:var(--wp--preset--color--white);background-color:var(--wp--preset--color--cc-orange-ada);padding-top:16px;padding-right:40px;padding-bottom:16px;padding-left:40px;border-radius:0px;border-width:2px;border-style:solid;border-color:var(--wp--preset--color--cc-orange-ada)}
+#cc-html-cc-landing-cpa-partners .wp-block-button__link {font-family:var(--wp--preset--font-family--montserrat);font-size:var(--wp--preset--font-size--btn);font-weight:500;line-height:1;letter-spacing:0.14em;text-transform:uppercase;color:var(--wp--preset--color--white);background-color:var(--wp--preset--color--cc-orange-ada);padding-top:16px;padding-right:40px;padding-bottom:16px;padding-left:40px;border-radius:0px;border-width:2px;border-style:solid;border-color:var(--wp--preset--color--cc-orange-ada)}
 #cc-html-cc-landing-cpa-partners .wp-block-paragraph {line-height:1.6}
 #cc-html-cc-landing-cpa-partners .wp-block-separator {color:var(--wp--preset--color--cc-hairline)}
 #cc-html-cc-landing-cpa-partners .wp-block-image {border-radius:0px}
-#cc-html-cc-landing-cpa-partners .wp-block-quote {font-family:var(--wp--preset--font-family--cormorant);font-size:var(--wp--preset--font-size--quote);font-weight:400}
+#cc-html-cc-landing-cpa-partners .wp-block-quote {font-family:var(--wp--preset--font-family--old-standard);font-size:var(--wp--preset--font-size--quote);font-weight:400}
 #cc-html-cc-landing-cpa-partners :where(.is-layout-flow) > * { margin-block-start: 0; margin-block-end: 0; }
 /**
  * Complete Controller Modern — component layer.
@@ -208,7 +207,7 @@
    sage is the same hue darkened 19% and clears 4.57:1 on every light surface.
    Brand sage is still correct for large text, rules and decorative fills. */
 #cc-html-cc-landing-cpa-partners .cc-eyebrow.cc-eyebrow {
-	font-family: var(--wp--preset--font-family--helvetica);
+	font-family: var(--wp--preset--font-family--montserrat);
 	font-size: 11px;
 	font-weight: 500;
 	line-height: 1.6;
@@ -233,7 +232,7 @@
 }
 #cc-html-cc-landing-cpa-partners .cc-rule--left::before { margin-inline: 0; }
 #cc-html-cc-landing-cpa-partners .cc-serif {
-	font-family: var(--wp--preset--font-family--cormorant);
+	font-family: var(--wp--preset--font-family--old-standard);
 	font-weight: 300;
 	font-size: var(--wp--preset--font-size--display);
 	line-height: 1.1;
@@ -273,7 +272,7 @@
    <a> still carries cc-btn — those keep rendering correctly without a rebuild. */
 #cc-html-cc-landing-cpa-partners .wp-block-button.cc-btn > .wp-block-button__link {
 	display: inline-block;
-	font-family: var(--wp--preset--font-family--helvetica);
+	font-family: var(--wp--preset--font-family--montserrat);
 	font-size: 13px;
 	font-weight: 500;
 	line-height: 1;
@@ -836,7 +835,7 @@
 }
 #cc-html-cc-landing-cpa-partners .cc-plan__period {
 	display: block;
-	font-family: var(--wp--preset--font-family--helvetica);
+	font-family: var(--wp--preset--font-family--montserrat);
 	font-size: 12px;
 	font-weight: 400;
 	letter-spacing: 0.08em;
@@ -1111,7 +1110,7 @@
 #cc-html-cc-landing-cpa-partners .cc-cmp__table th,
 #cc-html-cc-landing-cpa-partners .cc-cmp__table td { padding: 18px 24px; text-align: left; border-bottom: 1px solid var(--cc-hairline); }
 #cc-html-cc-landing-cpa-partners .cc-cmp__table thead th {
-	font-family: var(--wp--preset--font-family--helvetica);
+	font-family: var(--wp--preset--font-family--montserrat);
 	font-size: 11px;
 	font-weight: 500;
 	letter-spacing: 0.18em;
@@ -1260,7 +1259,7 @@
 #cc-html-cc-landing-cpa-partners .cc-philosophy h2 { max-width: 1100px; margin: 0 auto 64px; }
 #cc-html-cc-landing-cpa-partners .cc-philosophy .cc-lead { max-width: 800px; margin: 0 auto 24px !important; color: #555; font-weight: 400; line-height: 1.7; }
 #cc-html-cc-landing-cpa-partners .cc-philosophy .cc-philosophy__strong { color: var(--wp--preset--color--cc-dark); }
-#cc-html-cc-landing-cpa-partners .cc-philosophy__tagline { margin-top: 56px; font-family: var(--wp--preset--font-family--cormorant); font-style: italic; font-size: clamp(14px,1.3vw,18px); color: var(--wp--preset--color--cc-sage-ada); }
+#cc-html-cc-landing-cpa-partners .cc-philosophy__tagline { margin-top: 56px; font-family: var(--wp--preset--font-family--old-standard); font-style: italic; font-size: clamp(14px,1.3vw,18px); color: var(--wp--preset--color--cc-sage-ada); }
 #cc-html-cc-landing-cpa-partners .cc-human-ai .cc-section-head { margin-bottom: 64px; }
 #cc-html-cc-landing-cpa-partners .cc-human-ai .cc-section-head .cc-measure { max-width: 900px; }
 #cc-html-cc-landing-cpa-partners .cc-human-ai .cc-section-head .cc-measure > p { max-width: 720px; margin: 0 0 24px; font-size: clamp(15px,1.2vw,18px); line-height: 1.7; }
@@ -1433,7 +1432,7 @@
 #cc-html-cc-landing-cpa-partners .cc-starter-stat { text-align: center; }
 #cc-html-cc-landing-cpa-partners .cc-starter-stat > * { margin: 0; }
 #cc-html-cc-landing-cpa-partners .cc-starter-stat__value {
-	font-family: var(--wp--preset--font-family--cormorant);
+	font-family: var(--wp--preset--font-family--old-standard);
 	font-size: clamp(38px, 4vw, 58px);
 	line-height: 1;
 	color: var(--wp--preset--color--cc-sage);
@@ -1456,7 +1455,7 @@
 #cc-html-cc-landing-cpa-partners .cc-starter-stats--dark .cc-starter-stat__label { color: rgba(255, 255, 255, .76); }
 #cc-html-cc-landing-cpa-partners .cc-starter-story__copy p { margin: 0 0 22px; font-size: 16px; line-height: 1.8; color: var(--cc-starter-muted); }
 #cc-html-cc-landing-cpa-partners .cc-starter-story__quote { max-width: 900px; margin: clamp(56px, 7vw, 96px) auto 0; padding: 40px 0 0; border-top: 1px solid var(--cc-hairline); }
-#cc-html-cc-landing-cpa-partners .cc-starter-story__quote p { margin: 0; font-family: var(--wp--preset--font-family--cormorant); font-size: clamp(34px, 4vw, 58px); font-style: italic; line-height: 1.18; color: var(--cc-starter-ink); }
+#cc-html-cc-landing-cpa-partners .cc-starter-story__quote p { margin: 0; font-family: var(--wp--preset--font-family--old-standard); font-size: clamp(34px, 4vw, 58px); font-style: italic; line-height: 1.18; color: var(--cc-starter-ink); }
 #cc-html-cc-landing-cpa-partners .cc-starter-story__quote cite { display: block; margin-top: 24px; font-size: 11px; font-style: normal; letter-spacing: .18em; text-transform: uppercase; color: var(--wp--preset--color--cc-sage-ada); }
 #cc-html-cc-landing-cpa-partners .cc-starter-founder__grid,
 #cc-html-cc-landing-cpa-partners .cc-starter-book__grid {
@@ -1467,7 +1466,7 @@
 }
 #cc-html-cc-landing-cpa-partners .cc-starter-founder__copy > p { line-height: 1.75; color: var(--cc-starter-muted); }
 #cc-html-cc-landing-cpa-partners .cc-starter-founder__salutation { margin-top: 48px; font-weight: 600; color: var(--cc-starter-ink) !important; }
-#cc-html-cc-landing-cpa-partners .cc-starter-founder__close { font-family: var(--wp--preset--font-family--cormorant); font-size: 24px; font-style: italic; color: var(--cc-starter-ink) !important; }
+#cc-html-cc-landing-cpa-partners .cc-starter-founder__close { font-family: var(--wp--preset--font-family--old-standard); font-size: 24px; font-style: italic; color: var(--cc-starter-ink) !important; }
 #cc-html-cc-landing-cpa-partners .cc-starter-founder__signature { width: 180px; margin: 32px 0 12px; }
 #cc-html-cc-landing-cpa-partners .cc-starter-founder__signature img { width: 100%; height: auto; }
 #cc-html-cc-landing-cpa-partners .cc-starter-founder__byline { font-size: 11px; line-height: 1.7 !important; letter-spacing: .14em; text-transform: uppercase; }
@@ -1475,7 +1474,7 @@
 #cc-html-cc-landing-cpa-partners .cc-starter-founder__portrait img { display: block; width: 100%; max-height: 800px; object-fit: cover; object-position: top center; }
 #cc-html-cc-landing-cpa-partners .cc-starter-card__number {
 	margin: 0 0 32px !important;
-	font-family: var(--wp--preset--font-family--cormorant);
+	font-family: var(--wp--preset--font-family--old-standard);
 	font-size: 44px !important;
 	line-height: 1;
 	color: var(--wp--preset--color--cc-sage) !important;
@@ -1511,7 +1510,7 @@
 	border-bottom: 1px solid var(--cc-hairline);
 }
 #cc-html-cc-landing-cpa-partners .cc-starter-process__item:nth-child(even) .cc-starter-process__title { order: 2; }
-#cc-html-cc-landing-cpa-partners .cc-starter-process__number { margin: 0; font-family: var(--wp--preset--font-family--cormorant); font-size: clamp(72px, 9vw, 132px); line-height: .8; color: var(--wp--preset--color--cc-sage); }
+#cc-html-cc-landing-cpa-partners .cc-starter-process__number { margin: 0; font-family: var(--wp--preset--font-family--old-standard); font-size: clamp(72px, 9vw, 132px); line-height: .8; color: var(--wp--preset--color--cc-sage); }
 #cc-html-cc-landing-cpa-partners .cc-starter-process__title h3 { margin: -12px 0 0; }
 #cc-html-cc-landing-cpa-partners .cc-starter-process__copy { align-self: end; }
 #cc-html-cc-landing-cpa-partners .cc-starter-process__copy p { line-height: 1.75; color: var(--cc-starter-muted); }
@@ -1542,7 +1541,7 @@
 #cc-html-cc-landing-cpa-partners .cc-starter-definitions__list h3 { margin: 0 0 10px; }
 #cc-html-cc-landing-cpa-partners .cc-starter-definitions__list p { margin: 0 0 36px; line-height: 1.7; color: var(--cc-starter-muted); }
 #cc-html-cc-landing-cpa-partners .cc-starter-featured-quote .wp-block-quote { margin: 28px 0 0; }
-#cc-html-cc-landing-cpa-partners .cc-starter-featured-quote .wp-block-quote p { margin: 0; font-family: var(--wp--preset--font-family--cormorant); font-size: clamp(32px, 4.2vw, 62px); line-height: 1.18; color: var(--cc-starter-ink); }
+#cc-html-cc-landing-cpa-partners .cc-starter-featured-quote .wp-block-quote p { margin: 0; font-family: var(--wp--preset--font-family--old-standard); font-size: clamp(32px, 4.2vw, 62px); line-height: 1.18; color: var(--cc-starter-ink); }
 #cc-html-cc-landing-cpa-partners .cc-starter-featured-quote cite { display: block; margin-top: 30px; font-size: 11px; font-style: normal; letter-spacing: .15em; text-transform: uppercase; color: var(--wp--preset--color--cc-sage-ada); }
 #cc-html-cc-landing-cpa-partners .cc-quote.cc-starter-quote { min-height: 330px; height: auto; }
 #cc-html-cc-landing-cpa-partners .cc-starter-contact-hero { padding-top: clamp(96px, 10vw, 144px); }
@@ -1550,7 +1549,7 @@
 #cc-html-cc-landing-cpa-partners .cc-starter-contact-hero h1 { color: #fff; }
 #cc-html-cc-landing-cpa-partners .cc-starter-contact-hero .cc-lead.cc-lead,
 #cc-html-cc-landing-cpa-partners .cc-starter-contact-hero .cc-eyebrow { color: rgba(255, 255, 255, .82); }
-#cc-html-cc-landing-cpa-partners .cc-starter-contact-hero__phone { margin-top: 44px; font-family: var(--wp--preset--font-family--cormorant); font-size: clamp(32px, 4vw, 52px); }
+#cc-html-cc-landing-cpa-partners .cc-starter-contact-hero__phone { margin-top: 44px; font-family: var(--wp--preset--font-family--old-standard); font-size: clamp(32px, 4vw, 52px); }
 #cc-html-cc-landing-cpa-partners .cc-starter-contact-hero__phone a { color: #fff; text-decoration: none; }
 #cc-html-cc-landing-cpa-partners .cc-starter-contact-hero__phone span { font-family: var(--wp--preset--font-family--montserrat); font-size: 11px; letter-spacing: .15em; text-transform: uppercase; }
 #cc-html-cc-landing-cpa-partners .cc-starter-contact-hero__form { padding: clamp(32px, 5vw, 56px); color: var(--cc-starter-ink); background: #fff; }
@@ -1844,7 +1843,7 @@
 #cc-html-cc-landing-cpa-partners .cc-ind-features__grid .cc-card__icon svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 /* Team band. */
 #cc-html-cc-landing-cpa-partners .cc-ind-team .cc-section-head { margin-bottom: clamp(32px, 4vw, 56px); }
-#cc-html-cc-landing-cpa-partners .cc-ind-statement { margin: 0 0 clamp(32px, 4vw, 56px); font-family: var(--wp--preset--font-family--cormorant); font-weight: 300; font-size: clamp(28px, 3.4vw, 46px); line-height: 1.15; letter-spacing: -.01em; max-width: 900px; }
+#cc-html-cc-landing-cpa-partners .cc-ind-statement { margin: 0 0 clamp(32px, 4vw, 56px); font-family: var(--wp--preset--font-family--old-standard); font-weight: 300; font-size: clamp(28px, 3.4vw, 46px); line-height: 1.15; letter-spacing: -.01em; max-width: 900px; }
 #cc-html-cc-landing-cpa-partners .cc-ind-statement .cc-accent { color: var(--wp--preset--color--cc-orange); font-style: italic; }
 #cc-html-cc-landing-cpa-partners .cc-ind-team__intro { max-width: 760px; margin: 0 0 clamp(32px, 4vw, 56px); font-size: 16px; line-height: 1.7; }
 #cc-html-cc-landing-cpa-partners .cc-ind-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 2px; }
@@ -1881,11 +1880,10 @@
 #cc-html-cc-landing-cpa-partners .cc-ind-quotes .cc-grid--2 { gap: 20px; }
 /* FAQ spacing inside industry pages. */
 #cc-html-cc-landing-cpa-partners .cc-ind-faq .cc-section-head { margin-bottom: clamp(32px, 4vw, 56px); }
-/* Serif headings on the industry landing pages. Cormorant Garamond reads smaller
-   than Montserrat at the same size, so sizes are raised to keep the hierarchy. */
+/* Serif headings use the approved Old Standard TT brand font. */
 #cc-html-cc-landing-cpa-partners .cc-starter-page--industry :is(h1, h2, h3),
 #cc-html-cc-landing-cpa-partners .cc-starter-page--industry .cc-faq__item summary {
-	font-family: var(--wp--preset--font-family--cormorant);
+	font-family: var(--wp--preset--font-family--old-standard);
 	letter-spacing: -0.01em;
 }
 #cc-html-cc-landing-cpa-partners .cc-starter-page--industry h1.wp-block-heading.has-h-1-font-size { font-size: clamp(38px, 4.6vw, 70px) !important; font-weight: 400; line-height: 1.04; }
@@ -1922,7 +1920,7 @@
 #cc-html-cc-landing-cpa-partners .cc-starter-page--industry .cc-ind-quotes .cc-quote { background: #fff; border: 1px solid var(--cc-hairline); }
 #cc-html-cc-landing-cpa-partners .cc-starter-page--industry .cc-ind-quotes .cc-quote__text { margin: 0; }
 /* November founder-story page: use the existing theme palette, type and rhythm. */
-#cc-html-cc-landing-cpa-partners .cc-starter-page--about-story :is(h1, h2, h3) { font-family: var(--wp--preset--font-family--cormorant); font-weight: 400; letter-spacing: -.01em; }
+#cc-html-cc-landing-cpa-partners .cc-starter-page--about-story :is(h1, h2, h3) { font-family: var(--wp--preset--font-family--old-standard); font-weight: 400; letter-spacing: -.01em; }
 #cc-html-cc-landing-cpa-partners .cc-starter-page--construction :is(ul, ol) { text-align: left; }
 #cc-html-cc-landing-cpa-partners .cc-starter-page--about-story .cc-about-story-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(32px, 6vw, 96px); align-items: center; }
 #cc-html-cc-landing-cpa-partners .cc-starter-page--about-story .cc-about-story-grid > * { min-width: 0; }
@@ -1961,11 +1959,11 @@
 #cc-html-cc-landing-cpa-partners .cc-starter-page--about-story .cc-about-story-hammock img { aspect-ratio: 3 / 2; object-fit: cover; }
 #cc-html-cc-landing-cpa-partners .cc-starter-page--about-story .cc-about-story-belief-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 64px; margin-top: 56px; }
 #cc-html-cc-landing-cpa-partners .cc-starter-page--about-story .cc-about-story-belief { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 24px; padding-block: 40px; border-top: 1px solid var(--cc-hairline); }
-#cc-html-cc-landing-cpa-partners .cc-starter-page--about-story .cc-about-story-belief .cc-about-story-number { font-family: var(--wp--preset--font-family--cormorant); font-size: 40px; line-height: 1; color: var(--wp--preset--color--cc-sage-ada); }
+#cc-html-cc-landing-cpa-partners .cc-starter-page--about-story .cc-about-story-belief .cc-about-story-number { font-family: var(--wp--preset--font-family--old-standard); font-size: 40px; line-height: 1; color: var(--wp--preset--color--cc-sage-ada); }
 #cc-html-cc-landing-cpa-partners .cc-starter-page--about-story .cc-about-story-testimonial { padding: clamp(24px, 4vw, 56px); margin-top: 48px; background: #fff; }
 #cc-html-cc-landing-cpa-partners .cc-starter-page--about-story .cc-about-story-testimonial > * + *,
 #cc-html-cc-landing-cpa-partners .cc-starter-page--about-story .cc-about-story-close .cc-container > * + * { margin-top: 24px; }
-#cc-html-cc-landing-cpa-partners .cc-starter-page--about-story .cc-about-story-quote-text { font-family: var(--wp--preset--font-family--cormorant); font-size: clamp(28px, 3vw, 42px); line-height: 1.3; color: var(--wp--preset--color--cc-dark); }
+#cc-html-cc-landing-cpa-partners .cc-starter-page--about-story .cc-about-story-quote-text { font-family: var(--wp--preset--font-family--old-standard); font-size: clamp(28px, 3vw, 42px); line-height: 1.3; color: var(--wp--preset--color--cc-dark); }
 #cc-html-cc-landing-cpa-partners .cc-starter-page--about-story .cc-about-story-timeline { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 32px; margin-top: 64px; }
 #cc-html-cc-landing-cpa-partners .cc-starter-page--about-story .cc-about-story-milestone { border-top: 1px solid rgba(255, 255, 255, .3); padding-top: 24px; }
 #cc-html-cc-landing-cpa-partners .cc-starter-page--about-story .cc-about-story-milestone > * + * { margin-top: 16px; }
@@ -2006,11 +2004,15 @@
   max-height: none !important; aspect-ratio: auto;
  }
 #cc-html-cc-landing-cpa-partners #casi-panel #casi-mobile-close { display: flex !important; }}
+/* Compatibility for font presets already saved in existing WordPress pages. */
+#cc-html-cc-landing-cpa-partners { --wp--preset--font-family--cormorant: "Old Standard TT", serif; --wp--preset--font-family--helvetica: Montserrat, sans-serif; }
+#cc-html-cc-landing-cpa-partners .has-cormorant-font-family { font-family: "Old Standard TT", serif !important; }
+#cc-html-cc-landing-cpa-partners .has-helvetica-font-family { font-family: Montserrat, sans-serif !important; }
 #cc-html-cc-landing-cpa-partners { display:block; margin:0; }
 #cc-html-cc-landing-cpa-partners [hidden] { display:none !important; }
 #cc-html-cc-landing-cpa-partners .cc-cpa-page {color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 #cc-html-cc-landing-cpa-partners .cc-cpa-page {scroll-padding-top:env(safe-area-inset-top,0px)}
-#cc-html-cc-landing-cpa-partners .cc-cpa-page {margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}
+#cc-html-cc-landing-cpa-partners .cc-cpa-page {margin:0;padding:0;font:14px Montserrat,sans-serif;background:#fff;color:#000}
 #cc-html-cc-landing-cpa-partners .cc-cpa-page img {max-width:100%}
 #cc-html-cc-landing-cpa-partners .cc-cpa-page [hidden]:not([hidden=until-found i]) {display:none!important}
 /* =====================================================================
@@ -2020,8 +2022,7 @@
    declarations (including its clamp() formulas), not approximations.
    See references/brands/complete-controller.md before editing.
    ===================================================================== */
-/* Same font request the live site makes: Montserrat 400 and Old Standard TT 400 only.
-   Loading extra weights would make new pages look different from the homepage. */
+/* Brand fonts are supplied by the shared theme. */
 #cc-html-cc-landing-cpa-partners .cc-cpa-page {
   /* Brand color */
   --cc-green: #466359;          /* headings, nav, primary brand surface */
@@ -2053,17 +2054,11 @@
   --cc-border-tint: rgba(70, 99, 89, 0.12);
   --cc-header-rule: #CCCCCC;
 
-  /* Type families.
-     MATCH MODE (default): the live site's heading rule names "Old+Standard+TT",
-     which no loaded font matches, so visitors see the browser's default serif
-     (Times New Roman on Windows and Mac). The statement font, Cormorant Garamond,
-     is never loaded, so visitors see Georgia. These values reproduce what
-     visitors actually see. To switch to the intended fonts after the live site
-     is fixed, change the two lines marked SWITCH. */
-  --cc-font-heading: serif;                 /* SWITCH to: "Old Standard TT", serif */
-  --cc-font-statement: Georgia, serif;      /* SWITCH to: "Cormorant Garamond", Georgia, serif (and load it) */
-  --cc-font-body: Montserrat, "PingFang SC", "Microsoft YaHei", sans-serif;
-  --cc-font-nav: "Old Standard TT", serif;  /* WordPress header nav, which does load correctly */
+  /* Approved brand fonts, self-hosted through theme.json. */
+  --cc-font-heading: "Old Standard TT", serif;
+  --cc-font-statement: "Old Standard TT", serif;
+  --cc-font-body: Montserrat, sans-serif;
+  --cc-font-nav: "Old Standard TT", serif;
 
   /* Layout */
   --cc-gutter: clamp(20px, 4vw, 60px);       /* section side padding */
@@ -2330,20 +2325,16 @@
   font-size: 12.5px;
   white-space: nowrap;
 }
-@media (max-width: 900px) {
-  #cc-html-cc-landing-cpa-partners .cc-cpa-page .cc-hero__split {
+@media (max-width: 900px) {#cc-html-cc-landing-cpa-partners .cc-cpa-page .cc-hero__split {
     grid-template-columns: minmax(0, 1fr);
   }
-  #cc-html-cc-landing-cpa-partners .cc-cpa-page .cc-hero__art img {
+#cc-html-cc-landing-cpa-partners .cc-cpa-page .cc-hero__art img {
     max-width: 340px;
     margin-left: 0;
-  }
-}
-@media (max-width: 600px) {
-  #cc-html-cc-landing-cpa-partners .cc-cpa-page .cc-hero__art img {
+  }}
+@media (max-width: 600px) {#cc-html-cc-landing-cpa-partners .cc-cpa-page .cc-hero__art img {
     max-width: 280px;
-  }
-}
+  }}
 /* Draft notice and placeholders for terms Complete Controller must approve */
 #cc-html-cc-landing-cpa-partners .cc-cpa-page .draft-strip { background: var(--cc-green-dark); color: var(--cc-on-dark); font-size: 12px; letter-spacing: 0.04em; text-align: center; padding: 10px max(16px, env(safe-area-inset-right, 0px)) 10px max(16px, env(safe-area-inset-left, 0px)); }
 #cc-html-cc-landing-cpa-partners .cc-cpa-page .draft-strip b { color: var(--cc-orange); font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; margin-right: 8px; }
@@ -2433,8 +2424,8 @@
 @media (prefers-reduced-motion: reduce) {#cc-html-cc-landing-cpa-partners .cc-cpa-page .js-reveal { opacity: 1; transform: none; transition: none; }}
 /* Adopt the installed theme's typography and accessible brand shades. */
 #cc-html-cc-landing-cpa-partners .cc-cpa-page {
- --cc-font-heading: var(--wp--preset--font-family--cormorant);
- --cc-font-statement: var(--wp--preset--font-family--cormorant);
+ --cc-font-heading: var(--wp--preset--font-family--old-standard);
+ --cc-font-statement: var(--wp--preset--font-family--old-standard);
  --cc-font-body: var(--wp--preset--font-family--montserrat);
  --cc-sage: #567569;
  --cc-orange-text: #a94020;
@@ -2442,7 +2433,7 @@
  --cc-ink-muted: #666;
  --cc-ink-faint: #666;
 }
-#cc-html-cc-landing-cpa-partners .cc-cpa-page :is(.cc-h1, .cc-h2, .cc-h3) { font-family: var(--wp--preset--font-family--cormorant); }
+#cc-html-cc-landing-cpa-partners .cc-cpa-page :is(.cc-h1, .cc-h2, .cc-h3) { font-family: var(--wp--preset--font-family--old-standard); }
 #cc-html-cc-landing-cpa-partners .cc-cpa-page :is(.cc-eyebrow, .cc-step__label) { font-size:11px; letter-spacing:.24em; }
 #cc-html-cc-landing-cpa-partners .cc-cpa-page .cc-section :is(ul, ol) { text-align:left; }
 #cc-html-cc-landing-cpa-partners .cc-cpa-page :is(.cc-band__inner, .cc-container) { position:relative; }

@@ -8,15 +8,15 @@ Upload this entire folder, keeping its relative paths, and serve `index.html`. T
 
 ## Option B: content inside the existing site
 
-1. Upload `assets/` to the chosen page folder.
-2. Load `assets/css/page.css` in the document head.
+1. Upload `assets/` to the chosen page folder. All asset filenames start with `cpa-partners` so the five page packages can share one assets directory without overwriting one another. Keep the css, fonts, images and js subfolders.
+2. Load `assets/css/cpa-partners.css` in the document head.
 3. Place the contents of `content.html` in the site's content area. It contains its own main landmark; if your template already supplies `<main>`, change this outer tag to `<div>` while preserving its ID and classes.
 4. Update the fragment's `assets/...` image paths if the asset folder is hosted at a different URL.
 5. Load the scripts once, after the fragment or with `defer`:
 
 ```html
-<script src="/YOUR-PAGE/assets/js/page.js" defer></script>
 <script src="/YOUR-PAGE/assets/js/cpa-partners.js" defer></script>
+<script src="/YOUR-PAGE/assets/js/cpa-partners-calculator.js" defer></script>
 ```
 
 The CSS is scoped to `#cc-html-cc-landing-cpa-partners` to protect the surrounding site. The JavaScript also scopes its page-content queries. Use one copy of this page per document. Keep the wrapper ID/classes, field names and calculator/dialog IDs intact. A restrictive CMS may strip scripts, styles or forms from pasted content; enqueue those files through the site's supported admin/developer mechanism instead of pasting a full HTML document into an editor.

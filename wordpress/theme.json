@@ -40,24 +40,52 @@
 				{
 					"slug": "montserrat",
 					"name": "Montserrat",
-					"fontFamily": "Montserrat, \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+					"fontFamily": "Montserrat, sans-serif",
 					"fontFace": [
-						{ "fontFamily": "Montserrat", "fontWeight": "100 900", "fontStyle": "normal", "fontDisplay": "swap", "src": [ "file:./assets/fonts/montserrat-var.woff2" ] }
+						{
+							"fontFamily": "Montserrat",
+							"fontWeight": "100 900",
+							"fontStyle": "normal",
+							"fontDisplay": "swap",
+							"src": [
+								"file:./assets/fonts/montserrat-var.woff2"
+							]
+						}
 					]
 				},
 				{
-					"slug": "cormorant",
-					"name": "Cormorant Garamond",
-					"fontFamily": "\"Cormorant Garamond\", \"Times New Roman\", Georgia, serif",
+					"slug": "old-standard",
+					"name": "Old Standard TT",
+					"fontFamily": "\"Old Standard TT\", serif",
 					"fontFace": [
-						{ "fontFamily": "Cormorant Garamond", "fontWeight": "300 700", "fontStyle": "normal", "fontDisplay": "swap", "src": [ "file:./assets/fonts/cormorant-var.woff2" ] },
-						{ "fontFamily": "Cormorant Garamond", "fontWeight": "300 700", "fontStyle": "italic", "fontDisplay": "swap", "src": [ "file:./assets/fonts/cormorant-var-italic.woff2" ] }
+						{
+							"fontFamily": "Old Standard TT",
+							"fontWeight": "400",
+							"fontStyle": "normal",
+							"fontDisplay": "swap",
+							"src": [
+								"file:./assets/fonts/oldstandard-400.woff2"
+							]
+						},
+						{
+							"fontFamily": "Old Standard TT",
+							"fontWeight": "700",
+							"fontStyle": "normal",
+							"fontDisplay": "swap",
+							"src": [
+								"file:./assets/fonts/oldstandard-700.woff2"
+							]
+						},
+						{
+							"fontFamily": "Old Standard TT",
+							"fontWeight": "400",
+							"fontStyle": "italic",
+							"fontDisplay": "swap",
+							"src": [
+								"file:./assets/fonts/oldstandard-400-italic.woff2"
+							]
+						}
 					]
-				},
-				{
-					"slug": "helvetica",
-					"name": "Helvetica Neue",
-					"fontFamily": "\"Helvetica Neue\", Helvetica, Arial, sans-serif"
 				}
 			],
 			"fontSizes": [
@@ -110,7 +138,7 @@
 	"styles": {
 		"color": { "background": "var(--wp--preset--color--white)", "text": "var(--wp--preset--color--cc-dark)" },
 		"typography": {
-			"fontFamily": "var(--wp--preset--font-family--helvetica)",
+			"fontFamily": "var(--wp--preset--font-family--montserrat)",
 			"fontSize": "var(--wp--preset--font-size--body)",
 			"fontWeight": "400",
 			"lineHeight": "1.6"
@@ -167,7 +195,7 @@
 			},
 			"h5": {
 				"typography": {
-					"fontFamily": "var(--wp--preset--font-family--helvetica)",
+					"fontFamily": "var(--wp--preset--font-family--montserrat)",
 					"fontSize": "var(--wp--preset--font-size--btn)",
 					"fontWeight": "500",
 					"lineHeight": "1.6",
@@ -177,7 +205,7 @@
 			},
 			"h6": {
 				"typography": {
-					"fontFamily": "var(--wp--preset--font-family--helvetica)",
+					"fontFamily": "var(--wp--preset--font-family--montserrat)",
 					"fontSize": "var(--wp--preset--font-size--eyebrow)",
 					"fontWeight": "500",
 					"lineHeight": "1.6",
@@ -190,7 +218,7 @@
 				"border": { "radius": "0px", "width": "2px", "style": "solid", "color": "var(--wp--preset--color--cc-orange-ada)" },
 				"color": { "background": "var(--wp--preset--color--cc-orange-ada)", "text": "var(--wp--preset--color--white)" },
 				"typography": {
-					"fontFamily": "var(--wp--preset--font-family--helvetica)",
+					"fontFamily": "var(--wp--preset--font-family--montserrat)",
 					"fontSize": "var(--wp--preset--font-size--btn)",
 					"fontWeight": "500",
 					"lineHeight": "1",
@@ -216,7 +244,7 @@
 			},
 			"core/quote": {
 				"typography": {
-					"fontFamily": "var(--wp--preset--font-family--cormorant)",
+					"fontFamily": "var(--wp--preset--font-family--old-standard)",
 					"fontSize": "var(--wp--preset--font-size--quote)",
 					"fontWeight": "400"
 				}

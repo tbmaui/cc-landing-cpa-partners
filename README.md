@@ -4,7 +4,7 @@
 
 Open the link above to see the styled HTML page with its bundled fonts and images. No download or HTML viewer is needed.
 
-This page is available in **WordPress and plain HTML**, based on the reviewed cc-modern 1.3.14 theme styling.
+This page is available in **WordPress and plain HTML**, based on the reviewed cc-modern 1.3.15 theme styling.
 
 [Download both formats from the latest release](https://github.com/tbmaui/cc-landing-cpa-partners/releases/latest).
 
@@ -14,7 +14,7 @@ This page is available in **WordPress and plain HTML**, based on the reviewed cc
 |---|---|---|
 | Plain HTML | `html/index.html` and `html/assets/` | Upload a complete page-content document without WordPress, PHP, React or npm. |
 | HTML fragment | `html/content.html` and `html/assets/` | Place the page under the existing site's header/footer; load its scoped CSS and JavaScript as described in `html/README.md`. |
-| WordPress | Full `cc-modern-1.3.14.zip` theme attached to the release | Upload the shared theme, create a Full Width review draft and insert this page's starter. |
+| WordPress | Full `cc-modern-1.3.15.zip` theme attached to the release | Upload the shared theme, create a Full Width review draft and insert this page's starter. |
 | Existing theme integration | `wordpress/` | Page-specific files plus shared dependency snapshots for an existing cc-modern installation. This folder alone is not an installable theme. |
 
 The standalone HTML contains page content; it does not duplicate a site's header, footer, navigation or optional voice widget. The CSS is scoped to the supplied page wrapper. Local fonts/images are included. No build step is needed to host the delivered HTML.
@@ -50,3 +50,9 @@ See `html/README.md` for asset paths, supported embedding and launch configurati
 ## Browser preview
 
 GitHub Pages publishes the tracked `html/` export whenever that folder changes on `main`. You can also republish it from Actions > Publish page preview > Run workflow. The preview includes a noindex directive to discourage search indexing. It uses the standalone page content described above.
+
+## November 24 package correction
+
+Uses only the approved Old Standard TT and Montserrat brand fonts, including a local Old Standard italic face. Every HTML asset filename is page-specific, so the five packages can share one assets directory. Use release v1.1.1 and the shared cc-modern 1.3.15 theme; existing saved page content still needs a deliberate refresh. Original source exports are retained for provenance.
+
+To repeat the font, asset collision and responsive checks, install `tools/requirements-check.txt`, run `python -m playwright install chromium`, then `python tools/check-delivery.py --repo .`. Supply several `--repo` paths to check all page packages together. Screenshots and results stay in ignored `build/delivery-check/`.

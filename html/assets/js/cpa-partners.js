@@ -1,107 +1,341 @@
-(function () {
-'use strict';
-var ccCpaRoot = document.querySelector('.cc-cpa-page');
-if (!ccCpaRoot || ccCpaRoot.dataset.ccCpaReady) return;
-ccCpaRoot.dataset.ccCpaReady = 'true';
+/**
+ * Complete Controller Modern — progressive enhancements.
+ *
+ * Two behaviours, no dependencies:
+ *   1. Scroll reveal  — fades sections in as they enter the viewport.
+ *   2. Stat counters  — counts numeric figures up on first view.
+ *
+ * Both are strictly additive. The final state is what the markup already says, so
+ * blocking this file costs an animation and nothing else.
+ */
+( function () {
+	'use strict';
+	var ccPageRoot = document.getElementById("cc-html-cc-landing-cpa-partners");
+	if (!ccPageRoot || ccPageRoot.dataset.ccHtmlReady) return;
+	ccPageRoot.dataset.ccHtmlReady = 'true';
 
-/* Program terms: the single place to update once Complete Controller approves them. */
-const PROGRAM = {
-  commissionRate: 0.10,   // ILLUSTRATIVE ONLY, pending approval
-  commissionMonths: 12,   // ILLUSTRATIVE ONLY, pending approval
-  termsApproved: false
-};
+	var reduced = window.matchMedia( '(prefers-reduced-motion: reduce)' );
 
-(function () {
-  const $ = (id) => ccCpaRoot.querySelector('#' + CSS.escape(id));
-  const money = (n) => n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
-  const pair = (range, num) => {
-    const sync = (from, to) => {
-      let v = Number(from.value);
-      if (!Number.isFinite(v)) return;
-      v = Math.min(Number(from.max), Math.max(Number(from.min), v));
-      to.value = v; if (from === num && from.value !== '') from.value = v;
-      calc();
-    };
-    range.addEventListener('input', () => sync(range, num));
-    num.addEventListener('change', () => sync(num, range));
-  };
-  function calc() {
-    const clients = Number($('clients-range').value);
-    const fee = Number($('fee-range').value);
-    const perMonth = fee * PROGRAM.commissionRate;
-    const perClient = perMonth * PROGRAM.commissionMonths;
-    $('out-month').textContent = money(perMonth);
-    $('out-client').textContent = money(perClient);
-    $('out-total').textContent = money(perClient * clients);
-    $('out-client-desc').textContent = 'Over ' + PROGRAM.commissionMonths + ' months of service';
-    $('out-total-desc').textContent = clients + ' referred client' + (clients === 1 ? '' : 's') + ' over ' + PROGRAM.commissionMonths + ' months';
-    $('calc-terms').textContent = 'Based on a ' + Math.round(PROGRAM.commissionRate * 100) + '% commission on monthly bookkeeping fees for ' + PROGRAM.commissionMonths + ' months per referred client.' + (PROGRAM.termsApproved ? '' : ' Illustrative terms pending approval.');
-  }
-  pair($('clients-range'), $('clients-num'));
-  pair($('fee-range'), $('fee-num'));
-  calc();
+	/* ------------------------------------------------------------ reveal -- */
 
-  /* Application form: preview only. Production posts to a server route that writes to HubSpot. */
-  const freeDomains = /@(gmail|yahoo|hotmail|outlook|aol|icloud)\./i;
-  function wire(form, hp, done) {
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (hp.value) return;
-    let firstBad = null;
-    form.querySelectorAll('.field-error').forEach((n) => n.remove());
-    form.querySelectorAll('[required]').forEach((el) => {
-      let msg = '';
-      if (el.type === 'checkbox') { if (!el.checked) msg = 'Please confirm your client expects to hear from us.'; }
-      else if (!el.value.trim()) msg = 'Please fill this in.';
-      else if (el.type === 'email' && !el.checkValidity()) msg = 'Enter a valid email address, like name@company.com.';
-      else if (el.matches('[data-work]') && freeDomains.test(el.value)) msg = 'Please use your firm email address.';
-      el.setAttribute('aria-invalid', msg ? 'true' : 'false');
-      if (msg) {
-        const s = document.createElement('span'); s.className = 'field-error'; s.id = el.id + '-err'; s.textContent = msg;
-        el.setAttribute('aria-describedby', s.id); (el.type === 'checkbox' ? el.closest('label') : el).after(s);
-        firstBad = firstBad || el;
-      }
-    });
-    if (firstBad) { firstBad.focus(); return; }
-    form.hidden = true; done.hidden = false; done.focus();
-  });
-  }
-  wire($('apply-form'), $('f-hp'), $('apply-done'));
-  wire($('refer-form'), $('r-hp'), $('refer-done'));
+	function initReveal() {
+		var targets = ccPageRoot.querySelectorAll( '.cc-reveal, .cc-reveal--stagger' );
 
-  /* Refer a Client pop-up: every [data-refer] button opens it; reopening after a submission starts a fresh form. */
-  const dlg = $('refer-dialog');
-  let opener = null;
-  const closeRefer = () => { if (dlg.close) dlg.close(); else { dlg.removeAttribute('open'); if (opener) opener.focus(); } };
-  function openRefer(e) {
-    if (e) { e.preventDefault(); opener = e.currentTarget; }
-    const f = $('refer-form'), d = $('refer-done');
-    if (f.hidden) {
-      f.reset(); f.hidden = false; d.hidden = true;
-      f.querySelectorAll('.field-error').forEach((n) => n.remove());
-      f.querySelectorAll('[aria-invalid]').forEach((n) => { n.removeAttribute('aria-invalid'); n.removeAttribute('aria-describedby'); });
-    }
-    if (typeof dlg.showModal === 'function') { if (!dlg.open) dlg.showModal(); } else dlg.setAttribute('open', '');
-    dlg.scrollTop = 0;
-    $('r-name').focus();
-  }
-  ccCpaRoot.querySelectorAll('[data-refer]').forEach((b) => b.addEventListener('click', openRefer));
-  ccCpaRoot.querySelectorAll('[data-close-refer]').forEach((b) => b.addEventListener('click', closeRefer));
-  dlg.addEventListener('click', (e) => { if (e.target === dlg) closeRefer(); });
-  dlg.addEventListener('close', () => { if (opener) opener.focus(); });
-  if (location.hash === '#refer') openRefer();
+		if ( ! targets.length ) {
+			return;
+		}
 
-  /* Reveal sections below the first screen only, so the page is complete at rest. */
-  if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const targets = ccCpaRoot.querySelectorAll('.cc-heading-block, .cc-feature, .cc-tile, .cc-card, .cc-step, .cc-quote-card, .cc-quote-sm, .cc-callout');
-    const io = new IntersectionObserver((entries) => entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('is-visible'); io.unobserve(en.target); } }), { threshold: 0.12 });
-    targets.forEach((el) => {
-      if (el.getBoundingClientRect().top > window.innerHeight) {
-        if (el.matches('.cc-feature, .cc-tile, .cc-card, .cc-step, .cc-quote-sm')) el.style.setProperty('--cc-rise', '60px');
-        el.classList.add('js-reveal'); io.observe(el);
-      }
-    });
-  }
-})();
+		// Without IntersectionObserver, show everything immediately.
+		if ( ! ( 'IntersectionObserver' in window ) || reduced.matches ) {
+			Array.prototype.forEach.call( targets, function ( el ) {
+				el.classList.add( 'is-visible' );
+			} );
+			return;
+		}
 
-})();
+		var observer = new IntersectionObserver(
+			function ( entries ) {
+				entries.forEach( function ( entry ) {
+					if ( ! entry.isIntersecting ) {
+						return;
+					}
+					entry.target.classList.add( 'is-visible' );
+					observer.unobserve( entry.target );
+				} );
+			},
+			{
+				// Fire slightly before the element reaches the fold so the motion
+				// finishes about when it becomes properly readable.
+				rootMargin: '0px 0px -12% 0px',
+				threshold: 0.08,
+			}
+		);
+
+		const pending = new Set();
+
+		Array.prototype.forEach.call( targets, function ( el ) {
+			pending.add( el );
+			observer.observe( el );
+		} );
+
+		/**
+		 * Reveal anything the viewport has already passed.
+		 *
+		 * An element that goes from below the fold to above it within a single
+		 * frame — a scrollbar drag, an anchor jump, browser scroll restoration —
+		 * may never register as intersecting, and would otherwise sit at opacity 0
+		 * forever. This sweep guarantees content is never lost to the animation.
+		 */
+		const sweep = () => {
+			pending.forEach( ( el ) => {
+				if ( el.classList.contains( 'is-visible' ) ) {
+					pending.delete( el );
+					return;
+				}
+				if ( el.getBoundingClientRect().bottom < 0 ) {
+					el.classList.add( 'is-visible' );
+					observer.unobserve( el );
+					pending.delete( el );
+				}
+			} );
+
+			if ( ! pending.size ) {
+				window.removeEventListener( 'scroll', onScroll );
+			}
+		};
+
+		let ticking = false;
+		const onScroll = () => {
+			if ( ticking ) {
+				return;
+			}
+			ticking = true;
+			window.requestAnimationFrame( () => {
+				ticking = false;
+				sweep();
+			} );
+		};
+
+		sweep(); // Catch a restored scroll position on first paint.
+		window.addEventListener( 'scroll', onScroll, { passive: true } );
+	}
+
+	/* ---------------------------------------------------------- counters -- */
+
+	/**
+	 * Split a display figure into prefix, number and suffix.
+	 *
+	 * Handles the shapes used on the site: "600+", "$2.4M", "24hr", "100%", "2.3X".
+	 * Returns null when there is no number to animate.
+	 */
+	function parseFigure( text ) {
+		var match = text.match( /^(\D*?)([\d,]+(?:\.\d+)?)(.*)$/ );
+
+		if ( ! match ) {
+			return null;
+		}
+
+		var raw = match[ 2 ].replace( /,/g, '' );
+
+		return {
+			prefix: match[ 1 ],
+			value: parseFloat( raw ),
+			suffix: match[ 3 ],
+			// Preserve the author's precision: "2.4" animates to one decimal place.
+			decimals: ( raw.split( '.' )[ 1 ] || '' ).length,
+			grouped: match[ 2 ].indexOf( ',' ) !== -1,
+		};
+	}
+
+	function format( figure, value ) {
+		var out = value.toFixed( figure.decimals );
+
+		if ( figure.grouped ) {
+			var parts = out.split( '.' );
+			parts[ 0 ] = parts[ 0 ].replace( /\B(?=(\d{3})+(?!\d))/g, ',' );
+			out = parts.join( '.' );
+		}
+
+		return figure.prefix + out + figure.suffix;
+	}
+
+	function countUp( el, figure ) {
+		var duration = 1400;
+		var start = null;
+
+		function step( now ) {
+			if ( start === null ) {
+				start = now;
+			}
+
+			var progress = Math.min( ( now - start ) / duration, 1 );
+			// easeOutExpo — fast out of the gate, settles gently on the number.
+			var eased = progress === 1 ? 1 : 1 - Math.pow( 2, -10 * progress );
+
+			el.textContent = format( figure, figure.value * eased );
+
+			if ( progress < 1 ) {
+				window.requestAnimationFrame( step );
+			} else {
+				el.textContent = figure.original;
+			}
+		}
+
+		window.requestAnimationFrame( step );
+	}
+
+	function initCounters() {
+		var targets = ccPageRoot.querySelectorAll( '[data-cc-count]' );
+
+		if ( ! targets.length ) {
+			return;
+		}
+
+		if ( ! ( 'IntersectionObserver' in window ) || reduced.matches ) {
+			return; // Markup already holds the final value.
+		}
+
+		var observer = new IntersectionObserver(
+			function ( entries ) {
+				entries.forEach( function ( entry ) {
+					if ( ! entry.isIntersecting ) {
+						return;
+					}
+
+					var el = entry.target;
+					observer.unobserve( el );
+
+					var figure = parseFigure( el.textContent.trim() );
+
+					if ( ! figure ) {
+						return;
+					}
+
+					figure.original = el.textContent.trim();
+
+					// Lock the box so counting up does not reflow the layout.
+					el.style.display = 'inline-block';
+					el.style.minWidth = el.getBoundingClientRect().width + 'px';
+
+					countUp( el, figure );
+				} );
+			},
+			{ threshold: 0.5 }
+		);
+
+		Array.prototype.forEach.call( targets, function ( el ) {
+			observer.observe( el );
+		} );
+	}
+
+	/* ------------------------------------------------ consultation form -- */
+
+	function initConsultationForm() {
+		var form = ccPageRoot.querySelector( '[data-cc-consultation]' );
+
+		if ( ! form ) {
+			return;
+		}
+
+		var response = form.querySelector( '.cc-form-response' );
+		var button = form.querySelector( 'button[type="submit"]' );
+
+		function showResponse( message, isError ) {
+			response.textContent = message;
+			response.hidden = false;
+			response.style.borderColor = isError ? '#bb4c28' : '#6a9082';
+			response.style.backgroundColor = isError ? 'rgba(187,76,40,.08)' : 'rgba(106,144,130,.08)';
+		}
+
+		form.addEventListener( 'submit', function ( event ) {
+			event.preventDefault();
+
+			var data = new FormData( form );
+			var fullName = String( data.get( 'name' ) || '' ).trim();
+			var email = String( data.get( 'email' ) || '' ).trim();
+			var phone = String( data.get( 'phone' ) || '' ).trim();
+
+			if ( ! fullName || ! email || ! phone ) {
+				showResponse( 'Please fill in all required fields.', true );
+				return;
+			}
+
+			var splitAt = fullName.indexOf( ' ' );
+			var firstName = splitAt === -1 ? fullName : fullName.slice( 0, splitAt );
+			var lastName = splitAt === -1 ? '' : fullName.slice( splitAt + 1 );
+
+			button.disabled = true;
+			button.textContent = 'Submitting…';
+			response.hidden = true;
+
+			fetch( 'https://api.hsforms.com/submissions/v3/integration/submit/2446402/9b400fd2-8b1f-478c-b4ce-5c99028a0686', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify( {
+					fields: [
+						{ name: 'firstname', value: firstName },
+						{ name: 'lastname', value: lastName },
+						{ name: 'email', value: email },
+						{ name: 'phone', value: phone },
+						{ name: 'company', value: String( data.get( 'company' ) || '' ) },
+						{ name: 'all_interests_that_apply', value: String( data.get( 'serviceType' ) || '' ) },
+						{ name: 'message', value: String( data.get( 'message' ) || '' ) },
+					],
+					context: { pageUri: window.location.href, pageName: document.title },
+				} ),
+			} )
+				.then( function ( result ) {
+					if ( ! result.ok ) {
+						throw new Error( 'HubSpot submission failed' );
+					}
+					form.reset();
+					showResponse( 'Thank you — our team will be in touch within 24 hours. A confirmation has been sent to your email.', false );
+				} )
+				.catch( function () {
+					showResponse( 'Something went wrong. Please try again or call us directly.', true );
+				} )
+				.finally( function () {
+					button.disabled = false;
+					button.textContent = 'Request Consultation';
+				} );
+		} );
+	}
+
+	/* Keep CAS-i in its compact layout on touch screens in either orientation. */
+	function initVoiceAgentDock() {
+		var touchDock = window.matchMedia( '(max-width: 1024px) and (pointer: coarse), (max-height: 600px) and (pointer: coarse)' );
+		var observer;
+
+		function connect() {
+			var frame = document.getElementById( 'casi-iframe' );
+			var panel = document.getElementById( 'casi-panel' );
+			if ( ! frame || ! panel ) {
+				return false;
+			}
+
+			function sync() {
+				// Avoid reloading an open conversation or scheduler on rotation.
+				if ( ! touchDock.matches || panel.classList.contains( 'casi-expanded' ) || panel.classList.contains( 'casi-booking' ) ) {
+					return;
+				}
+				var url = new URL( frame.src, window.location.href );
+				if ( url.pathname === '/widget-true' && url.searchParams.get( 'mobileDock' ) !== 'true' ) {
+					url.searchParams.set( 'mobileDock', 'true' );
+					frame.src = url.href;
+				}
+			}
+
+			window.addEventListener( 'resize', function () { window.requestAnimationFrame( sync ); } );
+			new MutationObserver( sync ).observe( panel, { attributes: true, attributeFilter: [ 'class' ] } );
+			frame.addEventListener( 'load', sync );
+			sync();
+			return true;
+		}
+
+		if ( ! connect() ) {
+			observer = new MutationObserver( function () {
+				if ( connect() ) {
+					observer.disconnect();
+				}
+			} );
+			observer.observe( document.body, { childList: true, subtree: true } );
+			// Pages without the optional widget need no long-lived observer.
+			window.setTimeout( function () { observer.disconnect(); }, 15000 );
+		}
+	}
+
+	/* -------------------------------------------------------------- boot -- */
+
+	function init() {
+		initReveal();
+		initCounters();
+		initConsultationForm();
+		// The optional hosted voice widget is configured separately by the site admin.
+	}
+
+	if ( document.readyState === 'loading' ) {
+		document.addEventListener( 'DOMContentLoaded', init );
+	} else {
+		init();
+	}
+} )();

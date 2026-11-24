@@ -75,6 +75,12 @@ def export_page(repo, php):
         raise ValueError("An unresolved PHP tag remains in the export.")
 
     dest = repo / "html"
+    # Rebuild only this export's assets, removing stale fonts and generic names.
+    assets = (dest / "assets").resolve()
+    if assets.parent != dest.resolve() or dest.resolve().parent != repo.resolve():
+        raise ValueError("Export assets must remain inside this page repository.")
+    if assets.exists():
+        shutil.rmtree(assets)
     (dest / "assets/css").mkdir(parents=True, exist_ok=True)
     (dest / "assets/js").mkdir(parents=True, exist_ok=True)
     for directory in ("fonts", "images"):
@@ -83,13 +89,33 @@ def export_page(repo, php):
             shutil.copytree(source, dest / "assets" / directory, dirs_exist_ok=True)
 
     slug = metadata["repository"].split("/")[-1]
+    asset_name = slug.removeprefix("cc-landing-").removeprefix("cc-page-")
+    if asset_name == "about":
+        asset_name = "about-us"
+    asset_paths = {}
+    for directory in ("fonts", "images"):
+        for asset in sorted((dest / "assets" / directory).rglob("*")):
+            if asset.is_file():
+                old = asset.relative_to(dest / "assets").as_posix()
+                renamed = asset.with_name(asset_name + "-" + asset.name)
+                asset.rename(renamed)
+                asset_paths[old] = renamed.relative_to(dest / "assets").as_posix()
+
+    def rewrite_assets(value):
+        for old, new in asset_paths.items():
+            value = value.replace("assets/" + old, "assets/" + new)
+            value = value.replace("../" + old, "../" + new)
+        return value
+
     page_id = "cc-html-" + slug
     scope = "#" + page_id
     body = body.replace("../wordpress/assets/../assets/", "assets/").replace("../wordpress/assets/", "assets/")
+    body = rewrite_assets(body)
     css = "\n".join(re.findall(r"<style[^>]*>(.*?)</style>", rendered, re.S))
     css += "\n" + (repo / "wordpress/assets/css/theme.css").read_text(encoding="utf-8")
     # Native previews use font URLs relative to build/; deployment CSS lives at assets/css/.
     css = css.replace("../wordpress/assets/", "../")
+    css = rewrite_assets(css)
     css = scope_css(css, scope, ".wp-site-blocks")
     css += f"\n{scope} {{ display:block; margin:0; }}\n{scope} [hidden] {{ display:none !important; }}\n"
     cpa = repo / "wordpress/assets/css/cpa-partners.css"
@@ -100,18 +126,18 @@ def export_page(repo, php):
     # by moving it before the component stylesheet in this scoped bundle.
     reset = f"{scope} :where(.is-layout-flow) > * {{ margin-block-start:0; margin-block-end:0; }}\n"
     css = reset + css
-    (dest / "assets/css/page.css").write_text(css, encoding="utf-8", newline="\n")
+    (dest / f"assets/css/{asset_name}.css").write_text(css, encoding="utf-8", newline="\n")
 
     js = (repo / "wordpress/assets/js/enhance.js").read_text(encoding="utf-8")
     js = js.replace("'use strict';", "'use strict';\n\tvar ccPageRoot = document.getElementById(" + json.dumps(page_id) + ");\n\tif (!ccPageRoot || ccPageRoot.dataset.ccHtmlReady) return;\n\tccPageRoot.dataset.ccHtmlReady = 'true';", 1)
     js = js.replace("document.querySelectorAll(", "ccPageRoot.querySelectorAll(").replace("document.querySelector(", "ccPageRoot.querySelector(")
     js = js.replace("\t\tinitVoiceAgentDock();", "\t\t// The optional hosted voice widget is configured separately by the site admin.")
-    (dest / "assets/js/page.js").write_text(js, encoding="utf-8", newline="\n")
-    scripts = '<script src="assets/js/page.js" defer></script>'
+    (dest / f"assets/js/{asset_name}.js").write_text(js, encoding="utf-8", newline="\n")
+    scripts = f'<script src="assets/js/{asset_name}.js" defer></script>'
     cpa_js = repo / "wordpress/assets/js/cpa-partners.js"
     if cpa_js.exists():
-        shutil.copy2(cpa_js, dest / "assets/js/cpa-partners.js")
-        scripts += '\n<script src="assets/js/cpa-partners.js" defer></script>'
+        shutil.copy2(cpa_js, dest / f"assets/js/{asset_name}-calculator.js")
+        scripts += f'\n<script src="assets/js/{asset_name}-calculator.js" defer></script>'
 
     content = f'<main id="{page_id}" class="cc-static-page wp-site-blocks">\n{body.strip()}\n</main>\n'
     (dest / "content.html").write_text(content, encoding="utf-8", newline="\n")
@@ -119,7 +145,7 @@ def export_page(repo, php):
     description = metadata.get("html_description", "Complete Controller — " + metadata["page"] + ".")
     document = '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n'
     document += "<title>" + html.escape(title) + '</title>\n<meta name="description" content="' + html.escape(description, quote=True) + '">\n'
-    document += '<link rel="stylesheet" href="assets/css/page.css">\n<style>body{margin:0}</style>\n</head>\n<body>\n' + content + scripts + '\n</body>\n</html>\n'
+    document += f'<link rel="stylesheet" href="assets/css/{asset_name}.css">\n<style>body{{margin:0}}</style>\n</head>\n<body>\n' + content + scripts + '\n</body>\n</html>\n'
     (dest / "index.html").write_text(document, encoding="utf-8", newline="\n")
 
     script_instructions = scripts.replace('src="assets/', 'src="/YOUR-PAGE/assets/')
@@ -133,8 +159,8 @@ Upload this entire folder, keeping its relative paths, and serve `index.html`. T
 
 ## Option B: content inside the existing site
 
-1. Upload `assets/` to the chosen page folder.
-2. Load `assets/css/page.css` in the document head.
+1. Upload `assets/` to the chosen page folder. All asset filenames start with `{asset_name}` so the five page packages can share one assets directory without overwriting one another. Keep the css, fonts, images and js subfolders.
+2. Load `assets/css/{asset_name}.css` in the document head.
 3. Place the contents of `content.html` in the site's content area. It contains its own main landmark; if your template already supplies `<main>`, change this outer tag to `<div>` while preserving its ID and classes.
 4. Update the fragment's `assets/...` image paths if the asset folder is hosted at a different URL.
 5. Load the scripts once, after the fragment or with `defer`:

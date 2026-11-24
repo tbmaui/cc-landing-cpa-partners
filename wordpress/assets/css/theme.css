@@ -100,7 +100,7 @@
    sage is the same hue darkened 19% and clears 4.57:1 on every light surface.
    Brand sage is still correct for large text, rules and decorative fills. */
 .cc-eyebrow.cc-eyebrow {
-	font-family: var(--wp--preset--font-family--helvetica);
+	font-family: var(--wp--preset--font-family--montserrat);
 	font-size: 11px;
 	font-weight: 500;
 	line-height: 1.6;
@@ -127,7 +127,7 @@
 .cc-rule--left::before { margin-inline: 0; }
 
 .cc-serif {
-	font-family: var(--wp--preset--font-family--cormorant);
+	font-family: var(--wp--preset--font-family--old-standard);
 	font-weight: 300;
 	font-size: var(--wp--preset--font-size--display);
 	line-height: 1.1;
@@ -171,7 +171,7 @@
    <a> still carries cc-btn — those keep rendering correctly without a rebuild. */
 .wp-block-button.cc-btn > .wp-block-button__link {
 	display: inline-block;
-	font-family: var(--wp--preset--font-family--helvetica);
+	font-family: var(--wp--preset--font-family--montserrat);
 	font-size: 13px;
 	font-weight: 500;
 	line-height: 1;
@@ -800,7 +800,7 @@ a.cc-card:hover { border-color: var(--wp--preset--color--cc-sage); transform: tr
 }
 .cc-plan__period {
 	display: block;
-	font-family: var(--wp--preset--font-family--helvetica);
+	font-family: var(--wp--preset--font-family--montserrat);
 	font-size: 12px;
 	font-weight: 400;
 	letter-spacing: 0.08em;
@@ -1111,7 +1111,7 @@ a.cc-card:hover { border-color: var(--wp--preset--color--cc-sage); transform: tr
 .cc-cmp__table th,
 .cc-cmp__table td { padding: 18px 24px; text-align: left; border-bottom: 1px solid var(--cc-hairline); }
 .cc-cmp__table thead th {
-	font-family: var(--wp--preset--font-family--helvetica);
+	font-family: var(--wp--preset--font-family--montserrat);
 	font-size: 11px;
 	font-weight: 500;
 	letter-spacing: 0.18em;
@@ -1274,7 +1274,7 @@ a.cc-card:hover { border-color: var(--wp--preset--color--cc-sage); transform: tr
 .cc-philosophy h2 { max-width: 1100px; margin: 0 auto 64px; }
 .cc-philosophy .cc-lead { max-width: 800px; margin: 0 auto 24px !important; color: #555; font-weight: 400; line-height: 1.7; }
 .cc-philosophy .cc-philosophy__strong { color: var(--wp--preset--color--cc-dark); }
-.cc-philosophy__tagline { margin-top: 56px; font-family: var(--wp--preset--font-family--cormorant); font-style: italic; font-size: clamp(14px,1.3vw,18px); color: var(--wp--preset--color--cc-sage-ada); }
+.cc-philosophy__tagline { margin-top: 56px; font-family: var(--wp--preset--font-family--old-standard); font-style: italic; font-size: clamp(14px,1.3vw,18px); color: var(--wp--preset--color--cc-sage-ada); }
 
 .cc-human-ai .cc-section-head { margin-bottom: 64px; }
 .cc-human-ai .cc-section-head .cc-measure { max-width: 900px; }
@@ -1469,7 +1469,7 @@ a.cc-card:hover { border-color: var(--wp--preset--color--cc-sage); transform: tr
 .cc-starter-stat { text-align: center; }
 .cc-starter-stat > * { margin: 0; }
 .cc-starter-stat__value {
-	font-family: var(--wp--preset--font-family--cormorant);
+	font-family: var(--wp--preset--font-family--old-standard);
 	font-size: clamp(38px, 4vw, 58px);
 	line-height: 1;
 	color: var(--wp--preset--color--cc-sage);
@@ -1493,7 +1493,7 @@ a.cc-card:hover { border-color: var(--wp--preset--color--cc-sage); transform: tr
 
 .cc-starter-story__copy p { margin: 0 0 22px; font-size: 16px; line-height: 1.8; color: var(--cc-starter-muted); }
 .cc-starter-story__quote { max-width: 900px; margin: clamp(56px, 7vw, 96px) auto 0; padding: 40px 0 0; border-top: 1px solid var(--cc-hairline); }
-.cc-starter-story__quote p { margin: 0; font-family: var(--wp--preset--font-family--cormorant); font-size: clamp(34px, 4vw, 58px); font-style: italic; line-height: 1.18; color: var(--cc-starter-ink); }
+.cc-starter-story__quote p { margin: 0; font-family: var(--wp--preset--font-family--old-standard); font-size: clamp(34px, 4vw, 58px); font-style: italic; line-height: 1.18; color: var(--cc-starter-ink); }
 .cc-starter-story__quote cite { display: block; margin-top: 24px; font-size: 11px; font-style: normal; letter-spacing: .18em; text-transform: uppercase; color: var(--wp--preset--color--cc-sage-ada); }
 
 .cc-starter-founder__grid,
@@ -1505,7 +1505,7 @@ a.cc-card:hover { border-color: var(--wp--preset--color--cc-sage); transform: tr
 }
 .cc-starter-founder__copy > p { line-height: 1.75; color: var(--cc-starter-muted); }
 .cc-starter-founder__salutation { margin-top: 48px; font-weight: 600; color: var(--cc-starter-ink) !important; }
-.cc-starter-founder__close { font-family: var(--wp--preset--font-family--cormorant); font-size: 24px; font-style: italic; color: var(--cc-starter-ink) !important; }
+.cc-starter-founder__close { font-family: var(--wp--preset--font-family--old-standard); font-size: 24px; font-style: italic; color: var(--cc-starter-ink) !important; }
 .cc-starter-founder__signature { width: 180px; margin: 32px 0 12px; }
 .cc-starter-founder__signature img { width: 100%; height: auto; }
 .cc-starter-founder__byline { font-size: 11px; line-height: 1.7 !important; letter-spacing: .14em; text-transform: uppercase; }
@@ -1514,7 +1514,7 @@ a.cc-card:hover { border-color: var(--wp--preset--color--cc-sage); transform: tr
 
 .cc-starter-card__number {
 	margin: 0 0 32px !important;
-	font-family: var(--wp--preset--font-family--cormorant);
+	font-family: var(--wp--preset--font-family--old-standard);
 	font-size: 44px !important;
 	line-height: 1;
 	color: var(--wp--preset--color--cc-sage) !important;
@@ -1553,7 +1553,7 @@ a.cc-card:hover { border-color: var(--wp--preset--color--cc-sage); transform: tr
 	border-bottom: 1px solid var(--cc-hairline);
 }
 .cc-starter-process__item:nth-child(even) .cc-starter-process__title { order: 2; }
-.cc-starter-process__number { margin: 0; font-family: var(--wp--preset--font-family--cormorant); font-size: clamp(72px, 9vw, 132px); line-height: .8; color: var(--wp--preset--color--cc-sage); }
+.cc-starter-process__number { margin: 0; font-family: var(--wp--preset--font-family--old-standard); font-size: clamp(72px, 9vw, 132px); line-height: .8; color: var(--wp--preset--color--cc-sage); }
 .cc-starter-process__title h3 { margin: -12px 0 0; }
 .cc-starter-process__copy { align-self: end; }
 .cc-starter-process__copy p { line-height: 1.75; color: var(--cc-starter-muted); }
@@ -1587,7 +1587,7 @@ a.cc-card:hover { border-color: var(--wp--preset--color--cc-sage); transform: tr
 .cc-starter-definitions__list p { margin: 0 0 36px; line-height: 1.7; color: var(--cc-starter-muted); }
 
 .cc-starter-featured-quote .wp-block-quote { margin: 28px 0 0; }
-.cc-starter-featured-quote .wp-block-quote p { margin: 0; font-family: var(--wp--preset--font-family--cormorant); font-size: clamp(32px, 4.2vw, 62px); line-height: 1.18; color: var(--cc-starter-ink); }
+.cc-starter-featured-quote .wp-block-quote p { margin: 0; font-family: var(--wp--preset--font-family--old-standard); font-size: clamp(32px, 4.2vw, 62px); line-height: 1.18; color: var(--cc-starter-ink); }
 .cc-starter-featured-quote cite { display: block; margin-top: 30px; font-size: 11px; font-style: normal; letter-spacing: .15em; text-transform: uppercase; color: var(--wp--preset--color--cc-sage-ada); }
 .cc-quote.cc-starter-quote { min-height: 330px; height: auto; }
 
@@ -1596,7 +1596,7 @@ a.cc-card:hover { border-color: var(--wp--preset--color--cc-sage); transform: tr
 .cc-starter-contact-hero h1 { color: #fff; }
 .cc-starter-contact-hero .cc-lead.cc-lead,
 .cc-starter-contact-hero .cc-eyebrow { color: rgba(255, 255, 255, .82); }
-.cc-starter-contact-hero__phone { margin-top: 44px; font-family: var(--wp--preset--font-family--cormorant); font-size: clamp(32px, 4vw, 52px); }
+.cc-starter-contact-hero__phone { margin-top: 44px; font-family: var(--wp--preset--font-family--old-standard); font-size: clamp(32px, 4vw, 52px); }
 .cc-starter-contact-hero__phone a { color: #fff; text-decoration: none; }
 .cc-starter-contact-hero__phone span { font-family: var(--wp--preset--font-family--montserrat); font-size: 11px; letter-spacing: .15em; text-transform: uppercase; }
 .cc-starter-contact-hero__form { padding: clamp(32px, 5vw, 56px); color: var(--cc-starter-ink); background: #fff; }
@@ -1924,7 +1924,7 @@ a.cc-card:hover { border-color: var(--wp--preset--color--cc-sage); transform: tr
 
 /* Team band. */
 .cc-ind-team .cc-section-head { margin-bottom: clamp(32px, 4vw, 56px); }
-.cc-ind-statement { margin: 0 0 clamp(32px, 4vw, 56px); font-family: var(--wp--preset--font-family--cormorant); font-weight: 300; font-size: clamp(28px, 3.4vw, 46px); line-height: 1.15; letter-spacing: -.01em; max-width: 900px; }
+.cc-ind-statement { margin: 0 0 clamp(32px, 4vw, 56px); font-family: var(--wp--preset--font-family--old-standard); font-weight: 300; font-size: clamp(28px, 3.4vw, 46px); line-height: 1.15; letter-spacing: -.01em; max-width: 900px; }
 .cc-ind-statement .cc-accent { color: var(--wp--preset--color--cc-orange); font-style: italic; }
 .cc-ind-team__intro { max-width: 760px; margin: 0 0 clamp(32px, 4vw, 56px); font-size: 16px; line-height: 1.7; }
 .cc-ind-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 2px; }
@@ -1966,11 +1966,10 @@ a.cc-card:hover { border-color: var(--wp--preset--color--cc-sage); transform: tr
 /* FAQ spacing inside industry pages. */
 .cc-ind-faq .cc-section-head { margin-bottom: clamp(32px, 4vw, 56px); }
 
-/* Serif headings on the industry landing pages. Cormorant Garamond reads smaller
-   than Montserrat at the same size, so sizes are raised to keep the hierarchy. */
+/* Serif headings use the approved Old Standard TT brand font. */
 .cc-starter-page--industry :is(h1, h2, h3),
 .cc-starter-page--industry .cc-faq__item summary {
-	font-family: var(--wp--preset--font-family--cormorant);
+	font-family: var(--wp--preset--font-family--old-standard);
 	letter-spacing: -0.01em;
 }
 .cc-starter-page--industry h1.wp-block-heading.has-h-1-font-size { font-size: clamp(38px, 4.6vw, 70px) !important; font-weight: 400; line-height: 1.04; }
@@ -2009,7 +2008,7 @@ a.cc-card:hover { border-color: var(--wp--preset--color--cc-sage); transform: tr
 .cc-starter-page--industry .cc-ind-quotes .cc-quote__text { margin: 0; }
 
 /* November founder-story page: use the existing theme palette, type and rhythm. */
-.cc-starter-page--about-story :is(h1, h2, h3) { font-family: var(--wp--preset--font-family--cormorant); font-weight: 400; letter-spacing: -.01em; }
+.cc-starter-page--about-story :is(h1, h2, h3) { font-family: var(--wp--preset--font-family--old-standard); font-weight: 400; letter-spacing: -.01em; }
 .cc-starter-page--construction :is(ul, ol) { text-align: left; }
 .cc-starter-page--about-story .cc-about-story-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(32px, 6vw, 96px); align-items: center; }
 .cc-starter-page--about-story .cc-about-story-grid > * { min-width: 0; }
@@ -2038,10 +2037,10 @@ a.cc-card:hover { border-color: var(--wp--preset--color--cc-sage); transform: tr
 .cc-starter-page--about-story .cc-about-story-hammock img { aspect-ratio: 3 / 2; object-fit: cover; }
 .cc-starter-page--about-story .cc-about-story-belief-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 64px; margin-top: 56px; }
 .cc-starter-page--about-story .cc-about-story-belief { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 24px; padding-block: 40px; border-top: 1px solid var(--cc-hairline); }
-.cc-starter-page--about-story .cc-about-story-belief .cc-about-story-number { font-family: var(--wp--preset--font-family--cormorant); font-size: 40px; line-height: 1; color: var(--wp--preset--color--cc-sage-ada); }
+.cc-starter-page--about-story .cc-about-story-belief .cc-about-story-number { font-family: var(--wp--preset--font-family--old-standard); font-size: 40px; line-height: 1; color: var(--wp--preset--color--cc-sage-ada); }
 .cc-starter-page--about-story .cc-about-story-testimonial { padding: clamp(24px, 4vw, 56px); margin-top: 48px; background: #fff; }
 .cc-starter-page--about-story .cc-about-story-testimonial > * + *, .cc-starter-page--about-story .cc-about-story-close .cc-container > * + * { margin-top: 24px; }
-.cc-starter-page--about-story .cc-about-story-quote-text { font-family: var(--wp--preset--font-family--cormorant); font-size: clamp(28px, 3vw, 42px); line-height: 1.3; color: var(--wp--preset--color--cc-dark); }
+.cc-starter-page--about-story .cc-about-story-quote-text { font-family: var(--wp--preset--font-family--old-standard); font-size: clamp(28px, 3vw, 42px); line-height: 1.3; color: var(--wp--preset--color--cc-dark); }
 .cc-starter-page--about-story .cc-about-story-timeline { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 32px; margin-top: 64px; }
 .cc-starter-page--about-story .cc-about-story-milestone { border-top: 1px solid rgba(255, 255, 255, .3); padding-top: 24px; }
 .cc-starter-page--about-story .cc-about-story-milestone > * + * { margin-top: 16px; }
@@ -2086,3 +2085,8 @@ a.cc-card:hover { border-color: var(--wp--preset--color--cc-sage); transform: tr
  }
  #casi-panel #casi-mobile-close { display: flex !important; }
 }
+
+/* Compatibility for font presets already saved in existing WordPress pages. */
+:root { --wp--preset--font-family--cormorant: "Old Standard TT", serif; --wp--preset--font-family--helvetica: Montserrat, sans-serif; }
+.has-cormorant-font-family { font-family: "Old Standard TT", serif !important; }
+.has-helvetica-font-family { font-family: Montserrat, sans-serif !important; }

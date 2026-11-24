@@ -1,6 +1,6 @@
 .cc-cpa-page {color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 .cc-cpa-page {scroll-padding-top:env(safe-area-inset-top,0px)}
-.cc-cpa-page {margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}
+.cc-cpa-page {margin:0;padding:0;font:14px Montserrat,sans-serif;background:#fff;color:#000}
 .cc-cpa-page img {max-width:100%}
 .cc-cpa-page [hidden]:not([hidden=until-found i]) {display:none!important}
 /* =====================================================================
@@ -10,8 +10,7 @@
    declarations (including its clamp() formulas), not approximations.
    See references/brands/complete-controller.md before editing.
    ===================================================================== */
-/* Same font request the live site makes: Montserrat 400 and Old Standard TT 400 only.
-   Loading extra weights would make new pages look different from the homepage. */
+/* Brand fonts are supplied by the shared theme. */
 .cc-cpa-page {
   /* Brand color */
   --cc-green: #466359;          /* headings, nav, primary brand surface */
@@ -43,17 +42,11 @@
   --cc-border-tint: rgba(70, 99, 89, 0.12);
   --cc-header-rule: #CCCCCC;
 
-  /* Type families.
-     MATCH MODE (default): the live site's heading rule names "Old+Standard+TT",
-     which no loaded font matches, so visitors see the browser's default serif
-     (Times New Roman on Windows and Mac). The statement font, Cormorant Garamond,
-     is never loaded, so visitors see Georgia. These values reproduce what
-     visitors actually see. To switch to the intended fonts after the live site
-     is fixed, change the two lines marked SWITCH. */
-  --cc-font-heading: serif;                 /* SWITCH to: "Old Standard TT", serif */
-  --cc-font-statement: Georgia, serif;      /* SWITCH to: "Cormorant Garamond", Georgia, serif (and load it) */
-  --cc-font-body: Montserrat, "PingFang SC", "Microsoft YaHei", sans-serif;
-  --cc-font-nav: "Old Standard TT", serif;  /* WordPress header nav, which does load correctly */
+  /* Approved brand fonts, self-hosted through theme.json. */
+  --cc-font-heading: "Old Standard TT", serif;
+  --cc-font-statement: "Old Standard TT", serif;
+  --cc-font-body: Montserrat, sans-serif;
+  --cc-font-nav: "Old Standard TT", serif;
 
   /* Layout */
   --cc-gutter: clamp(20px, 4vw, 60px);       /* section side padding */
@@ -275,14 +268,65 @@
 .cc-cpa-page .cc-header { padding-left: max(var(--cc-gutter), env(safe-area-inset-left, 0px)); padding-right: max(var(--cc-gutter), env(safe-area-inset-right, 0px)); }
 .cc-cpa-page .cc-hero__content,
 .cc-cpa-page .cc-band__inner { padding-left: max(var(--cc-gutter-wide), env(safe-area-inset-left, 0px)); padding-right: max(var(--cc-gutter-wide), env(safe-area-inset-right, 0px)); }
-.cc-cpa-page .cc-hero,
-.cc-cpa-page .cc-hero__content { min-height: min(100vh, 860px); }
+.cc-cpa-page .cc-hero { min-height: auto; }
+.cc-cpa-page .cc-hero__content { min-height: auto; }
 /* White hero variant: dark green dot texture on white, text in brand colors for light backgrounds */
-.cc-cpa-page .cc-hero--light { background: var(--cc-white); border-bottom: 1px solid var(--cc-border-tint); }
+.cc-cpa-page .cc-hero--light { background: var(--cc-white); border-bottom: 1px solid var(--cc-border-tint); padding-block: 0; }
+.cc-cpa-page .cc-hero--light .cc-hero__content {
+  min-height: auto;
+  padding-top: clamp(40px, 4.5vw, 64px);
+  padding-bottom: clamp(40px, 4.5vw, 64px);
+}
 .cc-cpa-page .cc-hero--light .cc-section--dots::before { background-image: radial-gradient(circle at 1px 1px, rgba(42,59,53,0.30) 1px, transparent 0); }
-.cc-cpa-page .cc-hero--light .cc-h1 { color: var(--cc-green); text-shadow: none; }
-.cc-cpa-page .cc-hero--light .cc-hero__eyebrow { color: var(--cc-sage); }
+.cc-cpa-page .cc-hero--light .cc-h1 { color: var(--cc-green); text-shadow: none; margin-top: 10px; margin-bottom: 20px; }
+.cc-cpa-page .cc-hero--light .cc-hero__eyebrow { color: var(--cc-sage); margin-bottom: 0; }
 .cc-cpa-page .cc-hero--light .cc-hero-copy { color: var(--cc-ink-body); }
+.cc-cpa-page .cc-hero__split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(24px, 3.5vw, 48px);
+  align-items: center;
+  width: 100%;
+}
+.cc-cpa-page .cc-hero__art {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.cc-cpa-page .cc-hero__art img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 600px;
+}
+.cc-cpa-page .cc-btn-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}
+.cc-cpa-page .cc-btn-row .cc-btn {
+  padding: 14px 28px;
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+@media (max-width: 900px) {
+  .cc-cpa-page .cc-hero__split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .cc-cpa-page .cc-hero__art img {
+    max-width: 340px;
+    margin-left: 0;
+  }
+}
+@media (max-width: 600px) {
+  .cc-cpa-page .cc-hero__art img {
+    max-width: 280px;
+  }
+}
 /* Draft notice and placeholders for terms Complete Controller must approve */
 .cc-cpa-page .draft-strip { background: var(--cc-green-dark); color: var(--cc-on-dark); font-size: 12px; letter-spacing: 0.04em; text-align: center; padding: 10px max(16px, env(safe-area-inset-right, 0px)) 10px max(16px, env(safe-area-inset-left, 0px)); }
 .cc-cpa-page .draft-strip b { color: var(--cc-orange); font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; margin-right: 8px; }
@@ -372,8 +416,8 @@
 @media (prefers-reduced-motion: reduce) {.cc-cpa-page .js-reveal { opacity: 1; transform: none; transition: none; }}
 /* Adopt the installed theme's typography and accessible brand shades. */
 .cc-cpa-page {
- --cc-font-heading: var(--wp--preset--font-family--cormorant);
- --cc-font-statement: var(--wp--preset--font-family--cormorant);
+ --cc-font-heading: var(--wp--preset--font-family--old-standard);
+ --cc-font-statement: var(--wp--preset--font-family--old-standard);
  --cc-font-body: var(--wp--preset--font-family--montserrat);
  --cc-sage: #567569;
  --cc-orange-text: #a94020;
@@ -381,7 +425,7 @@
  --cc-ink-muted: #666;
  --cc-ink-faint: #666;
 }
-.cc-cpa-page :is(.cc-h1, .cc-h2, .cc-h3) { font-family: var(--wp--preset--font-family--cormorant); }
+.cc-cpa-page :is(.cc-h1, .cc-h2, .cc-h3) { font-family: var(--wp--preset--font-family--old-standard); }
 .cc-cpa-page :is(.cc-eyebrow, .cc-step__label) { font-size:11px; letter-spacing:.24em; }
 .cc-cpa-page .cc-section :is(ul, ol) { text-align:left; }
 .cc-cpa-page :is(.cc-band__inner, .cc-container) { position:relative; }

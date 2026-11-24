@@ -1,0 +1,3 @@
+-r requirements-export.txt
+playwright==1.65.2
+fonttools[woff]==4.68.0
