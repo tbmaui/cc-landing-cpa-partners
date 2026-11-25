@@ -62,5 +62,5 @@ To repeat the font, asset collision and responsive checks, install `tools/requir
 
 Use release v1.1.2. Two fixes from staging:
 
-- **Asset links start at the site root.** Every image, stylesheet and script link in `html/` is written as `/assets/...`, so the pages work at any URL without hand edits. The base path is one setting: rebuild with `python tools/export_html.py --asset-base /your/path/` (or change `ASSET_BASE` in that script) if the assets folder lives somewhere else. Font files load relative to the stylesheet and need no change.
+- **Asset links start at the site root.** Every image, stylesheet and script link in `html/` is written as `/assets/...`, so the pages work at any URL without hand edits. The base path is one setting: rebuild with `python tools/export_html.py --asset-base /your/path/` (or change `ASSET_BASE` in that script) if the assets folder lives somewhere else. Font links in the stylesheet use the same base path.
 - **Page fonts no longer touch the site header.** The page registered its fonts as plain `Montserrat` and `Old Standard TT`, which replaced the site's own fonts with those names, including in the header menu. The export now gives them page-only names, and `tools/check-delivery.py` checks a host header that uses the same font names stays unchanged.

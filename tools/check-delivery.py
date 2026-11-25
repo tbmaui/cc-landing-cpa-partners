@@ -71,6 +71,7 @@ def main():
                     assert families <= APPROVED, (asset, families)
             if asset.suffix == '.css':
                 text = asset.read_text(encoding='utf-8')
+                assert not re.search(r'url\(\s*["\']?\.\./', text), (asset, 'relative CSS url')
                 for family in re.findall(r'font-family\s*:\s*([^;}]+)', text):
                     assert not re.search(r'Cormorant Garamond|Helvetica|Georgia|Times New Roman', family, re.I), (asset, family)
         document = (repo / 'html/index.html').read_text(encoding='utf-8')
@@ -139,11 +140,23 @@ def main():
                 return [s.fontFamily, s.fontSize, s.fontWeight, s.letterSpacing, s.lineHeight, s.color, s.margin, el.getBoundingClientRect().height];
             })'''
             before = page.evaluate(probe)
+            header_before = page.locator('#host-header').screenshot()
+            errors.clear()
             page.add_style_tag(url=urljoin(base + '/', css))
             page.locator('body').evaluate('(el, html) => el.insertAdjacentHTML("beforeend", html)', fragment)
             page.evaluate('() => document.fonts.ready')
+            page.wait_for_load_state('networkidle')
             after = page.evaluate(probe)
             assert before == after, (slug, 'Host styles changed', before, after)
+            assert page.locator('#host-header').screenshot() == header_before, (slug, 'Host header pixels changed')
+            assert not errors, (slug, 'embedded page errors', errors)
+            embedded = page.evaluate('''() => ({
+                heading: getComputedStyle(document.querySelector('main h1')).fontFamily,
+                loaded: [...document.fonts].filter(f => f.status === 'loaded').map(f => f.family.replaceAll('"', '')),
+                brokenImages: [...document.images].filter(img => !img.complete || !img.naturalWidth).map(img => img.src)})''')
+            assert embedded['heading'].startswith(f'"{old_standard}"'), (slug, embedded)
+            assert old_standard in embedded['loaded'], (slug, 'page font did not load when embedded', embedded)
+            assert not embedded['brokenImages'], (slug, embedded)
             public_faces = page.evaluate('''(names) => [...document.fonts].map(f => f.family.replaceAll('"', ''))
                 .filter(f => names.includes(f))''', sorted(APPROVED))
             assert public_faces == ['Montserrat'], (slug, 'Page registered a public font family', public_faces)

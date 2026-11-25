@@ -4,10 +4,10 @@
 #cc-html-cc-landing-cpa-partners *,
 #cc-html-cc-landing-cpa-partners *::before,
 #cc-html-cc-landing-cpa-partners *::after { box-sizing: border-box; }
-@font-face{font-family:"CC Cpa Partners Montserrat";font-weight:100 900;font-style:normal;font-display:swap;src:url("../fonts/cpa-partners-montserrat-var.woff2") format("woff2")}
-@font-face{font-family:"CC Cpa Partners Old Standard TT";font-weight:400;font-style:normal;font-display:swap;src:url("../fonts/cpa-partners-oldstandard-400.woff2") format("woff2")}
-@font-face{font-family:"CC Cpa Partners Old Standard TT";font-weight:700;font-style:normal;font-display:swap;src:url("../fonts/cpa-partners-oldstandard-700.woff2") format("woff2")}
-@font-face{font-family:"CC Cpa Partners Old Standard TT";font-weight:400;font-style:italic;font-display:swap;src:url("../fonts/cpa-partners-oldstandard-400-italic.woff2") format("woff2")}
+@font-face{font-family:"CC Cpa Partners Montserrat";font-weight:100 900;font-style:normal;font-display:swap;src:url("/assets/fonts/cpa-partners-montserrat-var.woff2") format("woff2")}
+@font-face{font-family:"CC Cpa Partners Old Standard TT";font-weight:400;font-style:normal;font-display:swap;src:url("/assets/fonts/cpa-partners-oldstandard-400.woff2") format("woff2")}
+@font-face{font-family:"CC Cpa Partners Old Standard TT";font-weight:700;font-style:normal;font-display:swap;src:url("/assets/fonts/cpa-partners-oldstandard-700.woff2") format("woff2")}
+@font-face{font-family:"CC Cpa Partners Old Standard TT";font-weight:400;font-style:italic;font-display:swap;src:url("/assets/fonts/cpa-partners-oldstandard-400-italic.woff2") format("woff2")}
 #cc-html-cc-landing-cpa-partners {
 --wp--preset--color--white: #ffffff;
 --wp--preset--color--cc-light: #f6f6f6;
@@ -1776,7 +1776,7 @@
    hero portrait is therefore removed, leaving the supplied office photograph
    as the only visual behind the copy. */
 #cc-html-cc-landing-cpa-partners .cc-hero--casi .cc-hero__media {
-	background: center / cover no-repeat url("../images/home-hero-office.png");
+	background: center / cover no-repeat none;
 }
 #cc-html-cc-landing-cpa-partners .cc-hero--casi .cc-hero__media img,
 #cc-html-cc-landing-cpa-partners .cc-hero--casi .cc-hero__person {

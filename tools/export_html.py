@@ -86,6 +86,8 @@ def link_assets(markup, base):
 
 
 def export_page(repo, php, asset_base=ASSET_BASE):
+    if not asset_base.endswith("/"):
+        asset_base += "/"
     metadata = json.loads((repo / "page.json").read_text(encoding="utf-8"))
     if not metadata.get("wordpress_pattern"):
         raise ValueError("A reviewed WordPress pattern is required for a matching HTML export.")
@@ -151,6 +153,15 @@ def export_page(repo, php, asset_base=ASSET_BASE):
     # by moving it before the component stylesheet in this scoped bundle.
     reset = f"{scope} :where(.is-layout-flow) > * {{ margin-block-start:0; margin-block-end:0; }}\n"
     css = reset + css
+    def css_url(match):
+        target = match.group(2)
+        if not (dest / "assets" / target).is_file():
+            # Shared theme rules can name images this page does not ship; never emit a dead link.
+            print(f"Dropped unused CSS image reference: {target}")
+            return "none"
+        return f'url("{asset_base}{target}")'
+
+    css = re.sub(r'url\((["\']?)\.\./([^"\')]+)\1\)', css_url, css)
     (dest / f"assets/css/{asset_name}.css").write_text(css, encoding="utf-8", newline="\n")
 
     js = (repo / "wordpress/assets/js/enhance.js").read_text(encoding="utf-8")
@@ -164,8 +175,6 @@ def export_page(repo, php, asset_base=ASSET_BASE):
         shutil.copy2(cpa_js, dest / f"assets/js/{asset_name}-calculator.js")
         scripts += f'\n<script src="assets/js/{asset_name}-calculator.js" defer></script>'
 
-    if not asset_base.endswith("/"):
-        asset_base += "/"
     body = link_assets(body, asset_base)
     scripts = link_assets(scripts, asset_base)
     content = f'<main id="{page_id}" class="cc-static-page wp-site-blocks">\n{body.strip()}\n</main>\n'
@@ -199,7 +208,7 @@ Upload `assets/` so it is served at `{asset_base}`, then serve `index.html`. Thi
 {script_instructions}
 ```
 
-Every CSS rule is scoped to `{scope}` so it cannot style the site's header, footer or menus. The page's fonts are registered under page-only names (`CC {font_label} Montserrat` and `CC {font_label} Old Standard TT`), so they never replace a font the site already uses. Font files load relative to the stylesheet, so they need no path changes. The JavaScript also scopes its page-content queries. Use one copy of this page per document. Keep the wrapper ID/classes, field names and calculator/dialog IDs intact. A restrictive CMS may strip scripts, styles or forms from pasted content; enqueue those files through the site's supported admin/developer mechanism instead of pasting a full HTML document into an editor.
+Every CSS rule is scoped to `{scope}` so it cannot style the site's header, footer or menus. The page's fonts are registered under page-only names (`CC {font_label} Montserrat` and `CC {font_label} Old Standard TT`), so they never replace a font the site already uses. The JavaScript also scopes its page-content queries. Use one copy of this page per document. Keep the wrapper ID/classes, field names and calculator/dialog IDs intact. A restrictive CMS may strip scripts, styles or forms from pasted content; enqueue those files through the site's supported admin/developer mechanism instead of pasting a full HTML document into an editor.
 
 ## Forms and launch configuration
 

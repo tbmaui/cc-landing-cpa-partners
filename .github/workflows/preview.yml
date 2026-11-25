@@ -34,6 +34,7 @@ jobs:
           sed -i 's@</head>@<meta name="robots" content="noindex, nofollow">\n</head>@' _site/index.html
           # The package links assets from the site root; the preview lives in a subfolder.
           sed -i -E 's@(src|href|srcset)="/assets/@\1="assets/@g' _site/index.html _site/content.html
+          sed -i 's@url("/assets/@url("../@g' _site/assets/css/*.css
       - name: Name this attempt's artifact
         id: artifact
         run: echo "name=github-pages-${{ github.run_id }}-${{ github.run_attempt }}" >> "$GITHUB_OUTPUT"

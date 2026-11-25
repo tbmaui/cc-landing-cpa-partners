@@ -19,7 +19,7 @@ Upload `assets/` so it is served at `/assets/`, then serve `index.html`. This is
 <script src="/assets/js/cpa-partners-calculator.js" defer></script>
 ```
 
-Every CSS rule is scoped to `#cc-html-cc-landing-cpa-partners` so it cannot style the site's header, footer or menus. The page's fonts are registered under page-only names (`CC Cpa Partners Montserrat` and `CC Cpa Partners Old Standard TT`), so they never replace a font the site already uses. Font files load relative to the stylesheet, so they need no path changes. The JavaScript also scopes its page-content queries. Use one copy of this page per document. Keep the wrapper ID/classes, field names and calculator/dialog IDs intact. A restrictive CMS may strip scripts, styles or forms from pasted content; enqueue those files through the site's supported admin/developer mechanism instead of pasting a full HTML document into an editor.
+Every CSS rule is scoped to `#cc-html-cc-landing-cpa-partners` so it cannot style the site's header, footer or menus. The page's fonts are registered under page-only names (`CC Cpa Partners Montserrat` and `CC Cpa Partners Old Standard TT`), so they never replace a font the site already uses. The JavaScript also scopes its page-content queries. Use one copy of this page per document. Keep the wrapper ID/classes, field names and calculator/dialog IDs intact. A restrictive CMS may strip scripts, styles or forms from pasted content; enqueue those files through the site's supported admin/developer mechanism instead of pasting a full HTML document into an editor.
 
 ## Forms and launch configuration
 
