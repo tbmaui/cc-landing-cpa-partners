@@ -56,3 +56,11 @@ GitHub Pages publishes the tracked `html/` export whenever that folder changes o
 Uses only the approved Old Standard TT and Montserrat brand fonts, including a local Old Standard italic face. Every HTML asset filename is page-specific, so the five packages can share one assets directory. Use release v1.1.1 and the shared cc-modern 1.3.15 theme; existing saved page content still needs a deliberate refresh. Original source exports are retained for provenance.
 
 To repeat the font, asset collision and responsive checks, install `tools/requirements-check.txt`, run `python -m playwright install chromium`, then `python tools/check-delivery.py --repo .`. Supply several `--repo` paths to check all page packages together. Screenshots and results stay in ignored `build/delivery-check/`.
+
+
+## November 25 package correction
+
+Use release v1.1.2. Two fixes from staging:
+
+- **Asset links start at the site root.** Every image, stylesheet and script link in `html/` is written as `/assets/...`, so the pages work at any URL without hand edits. The base path is one setting: rebuild with `python tools/export_html.py --asset-base /your/path/` (or change `ASSET_BASE` in that script) if the assets folder lives somewhere else. Font files load relative to the stylesheet and need no change.
+- **Page fonts no longer touch the site header.** The page registered its fonts as plain `Montserrat` and `Old Standard TT`, which replaced the site's own fonts with those names, including in the header menu. The export now gives them page-only names, and `tools/check-delivery.py` checks a host header that uses the same font names stays unchanged.

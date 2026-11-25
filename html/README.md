@@ -4,22 +4,22 @@ This folder is a deployment deliverable. It contains no WordPress/PHP/React depe
 
 ## Option A: standalone document
 
-Upload this entire folder, keeping its relative paths, and serve `index.html`. This is the complete page-content document. Your web admin can add the site's header, footer and navigation around it; they are not duplicated in this export. The optional CAS-i voice widget is not automatically embedded.
+Upload `assets/` so it is served at `/assets/`, then serve `index.html`. This is the complete page-content document. Your web admin can add the site's header, footer and navigation around it; they are not duplicated in this export. The optional CAS-i voice widget is not automatically embedded.
 
 ## Option B: content inside the existing site
 
-1. Upload `assets/` to the chosen page folder. All asset filenames start with `cpa-partners` so the five page packages can share one assets directory without overwriting one another. Keep the css, fonts, images and js subfolders.
-2. Load `assets/css/cpa-partners.css` in the document head.
+1. Upload `assets/` so it is served at `/assets/` on the site. All asset filenames start with `cpa-partners` so the five page packages can share one assets folder without overwriting one another. Keep the css, fonts, images and js subfolders.
+2. Load `/assets/css/cpa-partners.css` in the document head.
 3. Place the contents of `content.html` in the site's content area. It contains its own main landmark; if your template already supplies `<main>`, change this outer tag to `<div>` while preserving its ID and classes.
-4. Update the fragment's `assets/...` image paths if the asset folder is hosted at a different URL.
+4. Every image, stylesheet and script link in this package is written as `/assets/...`. If the folder lives somewhere else, rebuild with `python tools/export_html.py --asset-base /your/path/` (or change `ASSET_BASE` in that script) instead of editing links by hand.
 5. Load the scripts once, after the fragment or with `defer`:
 
 ```html
-<script src="/YOUR-PAGE/assets/js/cpa-partners.js" defer></script>
-<script src="/YOUR-PAGE/assets/js/cpa-partners-calculator.js" defer></script>
+<script src="/assets/js/cpa-partners.js" defer></script>
+<script src="/assets/js/cpa-partners-calculator.js" defer></script>
 ```
 
-The CSS is scoped to `#cc-html-cc-landing-cpa-partners` to protect the surrounding site. The JavaScript also scopes its page-content queries. Use one copy of this page per document. Keep the wrapper ID/classes, field names and calculator/dialog IDs intact. A restrictive CMS may strip scripts, styles or forms from pasted content; enqueue those files through the site's supported admin/developer mechanism instead of pasting a full HTML document into an editor.
+Every CSS rule is scoped to `#cc-html-cc-landing-cpa-partners` so it cannot style the site's header, footer or menus. The page's fonts are registered under page-only names (`CC Cpa Partners Montserrat` and `CC Cpa Partners Old Standard TT`), so they never replace a font the site already uses. Font files load relative to the stylesheet, so they need no path changes. The JavaScript also scopes its page-content queries. Use one copy of this page per document. Keep the wrapper ID/classes, field names and calculator/dialog IDs intact. A restrictive CMS may strip scripts, styles or forms from pasted content; enqueue those files through the site's supported admin/developer mechanism instead of pasting a full HTML document into an editor.
 
 ## Forms and launch configuration
 

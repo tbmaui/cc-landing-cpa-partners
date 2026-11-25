@@ -1,6 +1,6 @@
 """Export a page repository's reviewed WordPress content as deployable HTML.
 
-Usage: python tools/export_html.py [--repo PATH] [--php PATH]
+Usage: python tools/export_html.py [--repo PATH] [--php PATH] [--asset-base URL]
 Install tools/requirements-export.txt before rebuilding. The delivered HTML
 itself needs no PHP, Python, npm, React or WordPress runtime.
 """
@@ -14,6 +14,15 @@ import subprocess
 from pathlib import Path
 
 import tinycss2
+
+# Where the live site serves this package's assets/ folder. The HTML links every
+# image, stylesheet and script from here. Change this one value (or pass
+# --asset-base) and rebuild if the folder is hosted somewhere else.
+ASSET_BASE = "/assets/"
+
+# Families the page CSS uses. They are renamed to page-only names in the export
+# so the page's @font-face rules can never replace a font the host site uses.
+PAGE_FONT_FAMILIES = ("Montserrat", "Old Standard TT")
 
 
 def scope_css(css, scope, root_class=None):
@@ -61,7 +70,22 @@ def scope_css(css, scope, root_class=None):
     return rules(tinycss2.parse_stylesheet(css, skip_whitespace=True))
 
 
-def export_page(repo, php):
+def private_font_names(css, asset_name):
+    """Give each page font a page-only family name so @font-face cannot leak."""
+    label = asset_name.replace("-", " ").title()
+    for family in PAGE_FONT_FAMILIES:
+        private = f'"CC {label} {family}"'
+        css = re.sub(r'(["\'])' + re.escape(family) + r'\1', private, css)
+        css = re.sub(r'(?<![\w"\'-])' + re.escape(family) + r'(?![\w"\'-])', private, css)
+    return css
+
+
+def link_assets(markup, base):
+    """Point HTML asset links at the hosted assets folder."""
+    return re.sub(r'(\b(?:src|href|srcset|poster)=["\'])assets/', lambda m: m.group(1) + base, markup)
+
+
+def export_page(repo, php, asset_base=ASSET_BASE):
     metadata = json.loads((repo / "page.json").read_text(encoding="utf-8"))
     if not metadata.get("wordpress_pattern"):
         raise ValueError("A reviewed WordPress pattern is required for a matching HTML export.")
@@ -117,10 +141,11 @@ def export_page(repo, php):
     css = css.replace("../wordpress/assets/", "../")
     css = rewrite_assets(css)
     css = scope_css(css, scope, ".wp-site-blocks")
+    css = private_font_names(css, asset_name)
     css += f"\n{scope} {{ display:block; margin:0; }}\n{scope} [hidden] {{ display:none !important; }}\n"
     cpa = repo / "wordpress/assets/css/cpa-partners.css"
     if cpa.exists():
-        css += scope_css(cpa.read_text(encoding="utf-8"), scope)
+        css += private_font_names(scope_css(cpa.read_text(encoding="utf-8"), scope), asset_name)
     # The reset must be emitted before component rules so their spacing wins.
     # The preview renderer emits the flow reset last; preserve its original specificity
     # by moving it before the component stylesheet in this scoped bundle.
@@ -139,37 +164,42 @@ def export_page(repo, php):
         shutil.copy2(cpa_js, dest / f"assets/js/{asset_name}-calculator.js")
         scripts += f'\n<script src="assets/js/{asset_name}-calculator.js" defer></script>'
 
+    if not asset_base.endswith("/"):
+        asset_base += "/"
+    body = link_assets(body, asset_base)
+    scripts = link_assets(scripts, asset_base)
     content = f'<main id="{page_id}" class="cc-static-page wp-site-blocks">\n{body.strip()}\n</main>\n'
     (dest / "content.html").write_text(content, encoding="utf-8", newline="\n")
     title = metadata["page"] + " | Complete Controller"
     description = metadata.get("html_description", "Complete Controller — " + metadata["page"] + ".")
     document = '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n'
     document += "<title>" + html.escape(title) + '</title>\n<meta name="description" content="' + html.escape(description, quote=True) + '">\n'
-    document += f'<link rel="stylesheet" href="assets/css/{asset_name}.css">\n<style>body{{margin:0}}</style>\n</head>\n<body>\n' + content + scripts + '\n</body>\n</html>\n'
+    document += f'<link rel="stylesheet" href="{asset_base}css/{asset_name}.css">\n<style>body{{margin:0}}</style>\n</head>\n<body>\n' + content + scripts + '\n</body>\n</html>\n'
     (dest / "index.html").write_text(document, encoding="utf-8", newline="\n")
 
-    script_instructions = scripts.replace('src="assets/', 'src="/YOUR-PAGE/assets/')
+    script_instructions = scripts
+    font_label = asset_name.replace("-", " ").title()
     instructions = f"""# {metadata['page']} — plain HTML option
 
 This folder is a deployment deliverable. It contains no WordPress/PHP/React dependency, Gutenberg comments or build step. Fonts and images are local.
 
 ## Option A: standalone document
 
-Upload this entire folder, keeping its relative paths, and serve `index.html`. This is the complete page-content document. Your web admin can add the site's header, footer and navigation around it; they are not duplicated in this export. The optional CAS-i voice widget is not automatically embedded.
+Upload `assets/` so it is served at `{asset_base}`, then serve `index.html`. This is the complete page-content document. Your web admin can add the site's header, footer and navigation around it; they are not duplicated in this export. The optional CAS-i voice widget is not automatically embedded.
 
 ## Option B: content inside the existing site
 
-1. Upload `assets/` to the chosen page folder. All asset filenames start with `{asset_name}` so the five page packages can share one assets directory without overwriting one another. Keep the css, fonts, images and js subfolders.
-2. Load `assets/css/{asset_name}.css` in the document head.
+1. Upload `assets/` so it is served at `{asset_base}` on the site. All asset filenames start with `{asset_name}` so the five page packages can share one assets folder without overwriting one another. Keep the css, fonts, images and js subfolders.
+2. Load `{asset_base}css/{asset_name}.css` in the document head.
 3. Place the contents of `content.html` in the site's content area. It contains its own main landmark; if your template already supplies `<main>`, change this outer tag to `<div>` while preserving its ID and classes.
-4. Update the fragment's `assets/...` image paths if the asset folder is hosted at a different URL.
+4. Every image, stylesheet and script link in this package is written as `{asset_base}...`. If the folder lives somewhere else, rebuild with `python tools/export_html.py --asset-base /your/path/` (or change `ASSET_BASE` in that script) instead of editing links by hand.
 5. Load the scripts once, after the fragment or with `defer`:
 
 ```html
 {script_instructions}
 ```
 
-The CSS is scoped to `{scope}` to protect the surrounding site. The JavaScript also scopes its page-content queries. Use one copy of this page per document. Keep the wrapper ID/classes, field names and calculator/dialog IDs intact. A restrictive CMS may strip scripts, styles or forms from pasted content; enqueue those files through the site's supported admin/developer mechanism instead of pasting a full HTML document into an editor.
+Every CSS rule is scoped to `{scope}` so it cannot style the site's header, footer or menus. The page's fonts are registered under page-only names (`CC {font_label} Montserrat` and `CC {font_label} Old Standard TT`), so they never replace a font the site already uses. Font files load relative to the stylesheet, so they need no path changes. The JavaScript also scopes its page-content queries. Use one copy of this page per document. Keep the wrapper ID/classes, field names and calculator/dialog IDs intact. A restrictive CMS may strip scripts, styles or forms from pasted content; enqueue those files through the site's supported admin/developer mechanism instead of pasting a full HTML document into an editor.
 
 ## Forms and launch configuration
 
@@ -189,5 +219,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument("--php", default="php")
+    parser.add_argument("--asset-base", default=ASSET_BASE,
+                        help="URL path where the assets/ folder is hosted (default: %(default)s)")
     args = parser.parse_args()
-    export_page(args.repo.resolve(), args.php)
+    export_page(args.repo.resolve(), args.php, args.asset_base)
