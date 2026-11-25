@@ -4,10 +4,10 @@
 #cc-html-cc-landing-cpa-partners *,
 #cc-html-cc-landing-cpa-partners *::before,
 #cc-html-cc-landing-cpa-partners *::after { box-sizing: border-box; }
-@font-face{font-family:"Montserrat";font-weight:100 900;font-style:normal;font-display:swap;src:url("../fonts/cpa-partners-montserrat-var.woff2") format("woff2")}
-@font-face{font-family:"Old Standard TT";font-weight:400;font-style:normal;font-display:swap;src:url("../fonts/cpa-partners-oldstandard-400.woff2") format("woff2")}
-@font-face{font-family:"Old Standard TT";font-weight:700;font-style:normal;font-display:swap;src:url("../fonts/cpa-partners-oldstandard-700.woff2") format("woff2")}
-@font-face{font-family:"Old Standard TT";font-weight:400;font-style:italic;font-display:swap;src:url("../fonts/cpa-partners-oldstandard-400-italic.woff2") format("woff2")}
+@font-face{font-family:"CC Cpa Partners Montserrat";font-weight:100 900;font-style:normal;font-display:swap;src:url("/assets/fonts/cpa-partners-montserrat-var.woff2") format("woff2")}
+@font-face{font-family:"CC Cpa Partners Old Standard TT";font-weight:400;font-style:normal;font-display:swap;src:url("/assets/fonts/cpa-partners-oldstandard-400.woff2") format("woff2")}
+@font-face{font-family:"CC Cpa Partners Old Standard TT";font-weight:700;font-style:normal;font-display:swap;src:url("/assets/fonts/cpa-partners-oldstandard-700.woff2") format("woff2")}
+@font-face{font-family:"CC Cpa Partners Old Standard TT";font-weight:400;font-style:italic;font-display:swap;src:url("/assets/fonts/cpa-partners-oldstandard-400-italic.woff2") format("woff2")}
 #cc-html-cc-landing-cpa-partners {
 --wp--preset--color--white: #ffffff;
 --wp--preset--color--cc-light: #f6f6f6;
@@ -35,8 +35,8 @@
 --wp--preset--font-size--h2-lg: clamp(36px, 4.45vw, 64px);
 --wp--preset--font-size--h1: clamp(36px, 5.5vw, 80px);
 --wp--preset--font-size--display: clamp(36px, 7vw, 96px);
---wp--preset--font-family--montserrat: Montserrat, sans-serif;
---wp--preset--font-family--old-standard: "Old Standard TT", serif;
+--wp--preset--font-family--montserrat: "CC Cpa Partners Montserrat", sans-serif;
+--wp--preset--font-family--old-standard: "CC Cpa Partners Old Standard TT", serif;
 --wp--preset--spacing--10: 2px;
 --wp--preset--spacing--20: 4px;
 --wp--preset--spacing--30: 8px;
@@ -1776,7 +1776,7 @@
    hero portrait is therefore removed, leaving the supplied office photograph
    as the only visual behind the copy. */
 #cc-html-cc-landing-cpa-partners .cc-hero--casi .cc-hero__media {
-	background: center / cover no-repeat url("../images/home-hero-office.png");
+	background: center / cover no-repeat none;
 }
 #cc-html-cc-landing-cpa-partners .cc-hero--casi .cc-hero__media img,
 #cc-html-cc-landing-cpa-partners .cc-hero--casi .cc-hero__person {
@@ -1880,7 +1880,7 @@
 #cc-html-cc-landing-cpa-partners .cc-ind-quotes .cc-grid--2 { gap: 20px; }
 /* FAQ spacing inside industry pages. */
 #cc-html-cc-landing-cpa-partners .cc-ind-faq .cc-section-head { margin-bottom: clamp(32px, 4vw, 56px); }
-/* Serif headings use the approved Old Standard TT brand font. */
+/* Serif headings use the approved "CC Cpa Partners Old Standard TT" brand font. */
 #cc-html-cc-landing-cpa-partners .cc-starter-page--industry :is(h1, h2, h3),
 #cc-html-cc-landing-cpa-partners .cc-starter-page--industry .cc-faq__item summary {
 	font-family: var(--wp--preset--font-family--old-standard);
@@ -2005,14 +2005,14 @@
  }
 #cc-html-cc-landing-cpa-partners #casi-panel #casi-mobile-close { display: flex !important; }}
 /* Compatibility for font presets already saved in existing WordPress pages. */
-#cc-html-cc-landing-cpa-partners { --wp--preset--font-family--cormorant: "Old Standard TT", serif; --wp--preset--font-family--helvetica: Montserrat, sans-serif; }
-#cc-html-cc-landing-cpa-partners .has-cormorant-font-family { font-family: "Old Standard TT", serif !important; }
-#cc-html-cc-landing-cpa-partners .has-helvetica-font-family { font-family: Montserrat, sans-serif !important; }
+#cc-html-cc-landing-cpa-partners { --wp--preset--font-family--cormorant: "CC Cpa Partners Old Standard TT", serif; --wp--preset--font-family--helvetica: "CC Cpa Partners Montserrat", sans-serif; }
+#cc-html-cc-landing-cpa-partners .has-cormorant-font-family { font-family: "CC Cpa Partners Old Standard TT", serif !important; }
+#cc-html-cc-landing-cpa-partners .has-helvetica-font-family { font-family: "CC Cpa Partners Montserrat", sans-serif !important; }
 #cc-html-cc-landing-cpa-partners { display:block; margin:0; }
 #cc-html-cc-landing-cpa-partners [hidden] { display:none !important; }
 #cc-html-cc-landing-cpa-partners .cc-cpa-page {color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 #cc-html-cc-landing-cpa-partners .cc-cpa-page {scroll-padding-top:env(safe-area-inset-top,0px)}
-#cc-html-cc-landing-cpa-partners .cc-cpa-page {margin:0;padding:0;font:14px Montserrat,sans-serif;background:#fff;color:#000}
+#cc-html-cc-landing-cpa-partners .cc-cpa-page {margin:0;padding:0;font:14px "CC Cpa Partners Montserrat",sans-serif;background:#fff;color:#000}
 #cc-html-cc-landing-cpa-partners .cc-cpa-page img {max-width:100%}
 #cc-html-cc-landing-cpa-partners .cc-cpa-page [hidden]:not([hidden=until-found i]) {display:none!important}
 /* =====================================================================
@@ -2055,10 +2055,10 @@
   --cc-header-rule: #CCCCCC;
 
   /* Approved brand fonts, self-hosted through theme.json. */
-  --cc-font-heading: "Old Standard TT", serif;
-  --cc-font-statement: "Old Standard TT", serif;
-  --cc-font-body: Montserrat, sans-serif;
-  --cc-font-nav: "Old Standard TT", serif;
+  --cc-font-heading: "CC Cpa Partners Old Standard TT", serif;
+  --cc-font-statement: "CC Cpa Partners Old Standard TT", serif;
+  --cc-font-body: "CC Cpa Partners Montserrat", sans-serif;
+  --cc-font-nav: "CC Cpa Partners Old Standard TT", serif;
 
   /* Layout */
   --cc-gutter: clamp(20px, 4vw, 60px);       /* section side padding */
@@ -2135,7 +2135,7 @@
 #cc-html-cc-landing-cpa-partners .cc-cpa-page .cc-takeaway { font-size: clamp(20px, 2.2vw, 30px); font-weight: 400; line-height: 1.4; letter-spacing: -0.015em; color: var(--cc-sage); max-width: 680px; }
 #cc-html-cc-landing-cpa-partners .cc-cpa-page .cc-fineprint { font-size: 13px; color: var(--cc-ink-faint); margin-top: 20px; }
 /* ---------- Buttons ---------- */
-#cc-html-cc-landing-cpa-partners .cc-cpa-page .cc-btn { display: inline-block; font-family: Montserrat, sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; text-align: center; border-radius: 12px; padding: 16px 40px; cursor: pointer; transition: all 0.3s; line-height: 1.6; }
+#cc-html-cc-landing-cpa-partners .cc-cpa-page .cc-btn { display: inline-block; font-family: "CC Cpa Partners Montserrat", sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; text-align: center; border-radius: 12px; padding: 16px 40px; cursor: pointer; transition: all 0.3s; line-height: 1.6; }
 /* Solid orange: primary action on dark backgrounds. Hover swaps to outline. */
 #cc-html-cc-landing-cpa-partners .cc-cpa-page .cc-btn--solid { color: var(--cc-white); background: var(--cc-orange); border: 2px solid var(--cc-orange); }
 #cc-html-cc-landing-cpa-partners .cc-cpa-page .cc-btn--solid:hover { color: var(--cc-orange); background: transparent; }
